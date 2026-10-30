@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1d1b1a">
+<title>Mesa iFood · a jornada em 1 minuto</title>
+<meta name="description" content="Sente. Coma. Saia. Veja como funciona a Mesa iFood: um assistente de IA que pede e paga por você, numa conversa só. Sem conta, sem maquininha.">
+<meta property="og:title" content="Mesa iFood · Sente. Coma. Saia.">
+<meta property="og:description" content="Pedir e pagar numa conversa só, com pagamento invisível.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1b1a;--ink2:#55514d;--red:#ea1d2c;--red-d:#b9101c;--stone:#ebeae6;--paper:#f8f6f1;--ok:#1b8a4f;--ai:#5b3fd1;--ai-bg:#f1edff;
+  --f:"Bricolage Grotesque","Helvetica Neue",Arial,system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--f);background:var(--stone);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.stage{min-height:100%;max-width:1000px;margin:0 auto;padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center}
+.side{display:flex;flex-direction:column;gap:18px}
+.brand{font-weight:800;letter-spacing:-.02em;font-size:1.05rem}.brand i{font-style:normal;color:var(--red)}
+.big{font-size:clamp(2.6rem,6vw,4.6rem);font-weight:800;line-height:.98;letter-spacing:-.03em}
+.big span{display:block}
+.capstep{font-weight:800;font-size:.95rem;color:var(--red-d)}
+.capdesc{font-size:1.15rem;color:var(--ink2);max-width:30ch;min-height:5.2em}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dots{display:flex;gap:6px}
+.dots button{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--ink);background:transparent;font-weight:700;font-size:.85rem;cursor:pointer;color:var(--ink)}
+.dots button[aria-current=step]{background:var(--ink);color:#fff}
+.dots button.done{background:#dcdad5}
+.btn{border:1.5px solid var(--ink);background:#fff;border-radius:99px;padding:8px 16px;font-weight:700;font-size:.88rem;cursor:pointer;color:var(--ink);text-decoration:none;display:inline-block}
+.btn.pri{background:var(--red);border-color:var(--red);color:#fff}
+.hintline{font-size:.82rem;color:var(--ink2)}
+
+/* phone */
+.phone{width:min(340px,92vw);background:var(--ink);border-radius:42px;padding:11px;box-shadow:0 30px 60px -28px rgba(0,0,0,.55);justify-self:center}
+.screen{background:#fff;border-radius:32px;height:660px;max-height:calc(100dvh - 120px);min-height:520px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.status{display:flex;justify-content:space-between;padding:12px 22px 4px;font-size:.78rem;font-weight:700;flex:none}
+.apphead{display:flex;align-items:center;gap:10px;padding:8px 18px 12px;border-bottom:1px solid #eee;flex:none}
+.logo{background:var(--red);color:#fff;font-weight:800;border-radius:8px;padding:2px 8px;font-size:.95rem;letter-spacing:-.03em}
+.apphead small{display:block;color:#777;font-size:.74rem;line-height:1.2}
+.apphead b{font-size:.92rem;line-height:1.2}
+.prog{display:flex;align-items:center;gap:4px;padding:6px 18px 8px;font-size:.74rem;color:#666;flex:none}
+.prog i{width:22px;height:4px;border-radius:3px;background:#e2e2e2;display:block;transition:background .3s}
+.prog i.done{background:var(--ok)}.prog i.cur{background:var(--red)}
+.prog span{margin-left:6px;font-weight:700;color:#444}
+.screen.entry .prog,.screen.entry .foot{display:none}
+.th{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:10px;padding:12px 16px 8px;scroll-behavior:smooth}
+.foot{flex:none;display:flex;flex-direction:column;gap:8px;padding:8px 16px 14px;border-top:1px solid #f0f0f0}
+.in{animation:up .38s cubic-bezier(.2,.9,.3,1) both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.b{max-width:90%;padding:8px 11px;border-radius:14px;font-size:.84rem;line-height:1.38}
+.b.u{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.b.a{align-self:flex-start;background:var(--ai-bg);color:#2f2170;border-bottom-left-radius:4px}
+.cardm{border:1.5px solid #e6e6e6;border-radius:14px;padding:11px;display:flex;flex-direction:column;gap:8px;background:#fff;font-size:.84rem;align-self:stretch}
+.cardm b{font-size:.92rem;line-height:1.25}.cardm small{color:#666;font-size:.77rem;line-height:1.35}
+.cardm.ok{background:#f3faf6;border-color:#cfe8da}
+.okline{font-size:.8rem;font-weight:700;color:#0d6b39}
+.cta{border:0;background:var(--red);color:#fff;font:700 .9rem var(--f);padding:10px 14px;border-radius:14px;cursor:default;align-self:flex-start}
+.cta.full{align-self:stretch;padding:13px;font-size:.98rem;text-align:center}
+.ghost{border:1.5px solid var(--ink);background:#fff;color:var(--ink);font:700 .84rem var(--f);padding:9px;border-radius:12px;text-align:center}
+.mini{border:1.5px solid var(--red);color:var(--red-d);background:#fff;font:700 .74rem var(--f);padding:6px 9px;border-radius:10px;align-self:flex-start;white-space:nowrap}
+.grp{font-size:.74rem;font-weight:700;color:#777}
+.menuitem{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1.5px solid #e6e6e6;border-radius:12px;padding:8px 10px;font-size:.83rem;background:#fff}
+.menuitem b{display:block}.menuitem small{display:block;color:#666;font-size:.74rem;line-height:1.3}
+.menuitem button{border:1.5px solid var(--red);color:var(--red-d);background:#fff;font:700 .78rem var(--f);padding:6px 10px;border-radius:10px;white-space:nowrap}
+.menuitem button.on{background:var(--red);color:#fff}
+.rec{display:inline-block;font-style:normal;font-size:.68rem;font-weight:800;color:var(--ai);background:var(--ai-bg);border-radius:99px;padding:1px 8px;margin-bottom:2px}
+.qchips{display:flex;flex-wrap:wrap;gap:6px}
+.qchips span{border:1.5px solid #d9d0fb;background:#fff;color:#3a2a9a;font:600 .78rem var(--f);padding:6px 10px;border-radius:99px}
+.orderbar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.84rem;font-weight:700;background:#fff4f4;border:1.5px solid #f3b9bd;border-radius:12px;padding:6px 6px 6px 12px}
+.field{display:flex;gap:6px}
+.field .txt{flex:1;min-width:0;border:1.5px solid #ddd;border-radius:12px;padding:9px 11px;font-size:.85rem;color:#999;min-height:40px;white-space:nowrap;overflow:hidden}
+.field .txt.has{color:var(--ink)}
+.field .txt.has:after{content:"";display:inline-block;width:1.5px;height:1em;background:var(--ink);margin-left:1px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.field span.ic{border:1.5px solid var(--ai);background:#fff;color:var(--ai);border-radius:12px;font:700 .8rem var(--f);padding:0 11px;display:grid;place-items:center}
+.field span.ic.send{background:var(--ai);color:#fff;width:40px;font-size:1.1rem}
+.listen{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ai);font-weight:700}
+.wave{display:flex;gap:3px;align-items:center;height:18px}
+.wave i{display:block;width:3px;background:var(--ai);border-radius:2px;animation:w .8s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:.1s}.wave i:nth-child(3){animation-delay:.2s}.wave i:nth-child(4){animation-delay:.3s}.wave i:nth-child(5){animation-delay:.4s}
+@keyframes w{0%,100%{height:4px}50%{height:18px}}
+.receipt{background:var(--paper);border:1px solid #e4e0d6;border-radius:6px;padding:11px 12px 9px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.72rem;line-height:1.5}
+.receipt .who{margin-top:6px;font-weight:700;border-top:1px dashed #b9b4a8;padding-top:4px}.receipt .who:first-child{margin-top:0;border-top:0;padding-top:0}
+.receipt .row{display:flex;justify-content:space-between;gap:8px}.receipt .tot{border-top:1px dashed #b9b4a8;margin-top:6px;padding-top:5px;font-weight:700}
+.ppl{display:flex;align-items:center;gap:6px;font-size:.84rem}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:inline-grid;place-items:center;font-size:.74rem;font-weight:800;flex:none}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid #e3e3e3;border-radius:12px;padding:8px 11px;font-size:.82rem;line-height:1.3;transition:border-color .2s,background .2s}
+.opt b{display:block;font-size:.88rem}
+.opt .rd{width:14px;height:14px;border-radius:50%;border:2px solid #999;margin-top:3px;flex:none;position:relative}
+.opt.sel{border-color:var(--red);background:#fff4f4}.opt.sel .rd{border-color:var(--red)}.opt.sel .rd:after{content:"";position:absolute;inset:2px;border-radius:50%;background:var(--red)}
+.amtrow{display:flex;align-items:center;gap:8px;font-size:.86rem}.amtrow .nm{flex:1}
+.amt{border:1.5px solid #ddd;border-radius:10px;padding:5px 10px;font-weight:700;font-size:.84rem}
+.sum{display:flex;justify-content:space-between;font-size:.86rem}.sum.big2{font-size:1.05rem;font-weight:800;border-top:1px solid #e8e8e8;padding-top:7px}
+.linkbtn{font-weight:600;font-size:.8rem;color:#55514d;text-decoration:underline;align-self:flex-start}
+.note{font-size:.79rem;background:#fff7e6;border:1px solid #f0d9a8;border-radius:10px;padding:8px 11px;line-height:1.35}
+.aibox{font-size:.8rem;background:var(--ai-bg);border:1px solid #d9d0fb;border-radius:12px;padding:9px 11px;line-height:1.38;color:#2f2170}.aibox b{color:var(--ai)}
+.done{text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px}
+.check{width:50px;height:50px;border-radius:50%;background:var(--ok);display:grid;place-items:center;color:#fff;font-size:1.6rem;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.stars{display:flex;gap:4px;justify-content:center}.stars i{font-style:normal;font-size:1.5rem;color:#ccc;transition:color .2s}.stars i.on{color:#f5a623}
+.rc{display:flex;gap:11px;align-items:center;border:1.5px solid #e6e6e6;border-radius:14px;padding:10px;background:#fff}
+.rc.act{border-color:var(--red);box-shadow:0 0 0 3px #ffe3e5}
+.rc .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem;flex:none}
+.rc b{display:block;font-size:.92rem;line-height:1.2}.rc small{display:block;color:#666;font-size:.76rem;line-height:1.3}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:#efefef;border-radius:12px;padding:3px}
+.seg span{font:600 .84rem var(--f);padding:8px;border-radius:10px;color:#555;text-align:center}.seg span.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.s{font-size:.83rem;color:#666;line-height:1.4}
+
+/* overlays */
+.ripple{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:rgba(234,29,44,.28);border:2px solid var(--red);pointer-events:none;animation:rip .7s ease-out forwards;z-index:6}
+@keyframes rip{from{transform:scale(.4);opacity:1}to{transform:scale(1.5);opacity:0}}
+.press{transform:scale(.96);filter:brightness(.92);transition:transform .15s}
+.pulse{animation:pl 1s ease-in-out 2}
+@keyframes pl{50%{box-shadow:0 0 0 4px rgba(91,63,209,.35)}}
+.notif{position:absolute;left:12px;right:12px;top:40px;background:var(--ink);color:#fff;border-radius:14px;padding:10px 12px;font-size:.8rem;line-height:1.3;z-index:7;opacity:0;transform:translateY(-24px);pointer-events:none;transition:transform .4s cubic-bezier(.2,.9,.3,1),opacity .3s;box-shadow:0 10px 24px -10px rgba(0,0,0,.6)}
+.notif.show{opacity:1;transform:none}.notif small{display:block;color:#bdb8b0;font-size:.7rem;font-weight:700}
+.badge{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%) scale(.6);opacity:0;background:var(--red);color:#fff;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;border-radius:20px;padding:14px 22px;text-align:center;z-index:8;transition:all .5s cubic-bezier(.2,1.3,.4,1);box-shadow:0 20px 40px -14px rgba(0,0,0,.5)}
+.badge.show{opacity:1;transform:translate(-50%,-50%) scale(1)}.badge small{display:block;font-size:.78rem;font-weight:600;opacity:.9}
+.end{position:absolute;inset:0;background:var(--ink);color:#fff;border-radius:32px;z-index:9;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:28px;opacity:0;pointer-events:none;transition:opacity .6s}
+.end.show{opacity:1;pointer-events:auto}
+.end h2{font-size:2.3rem;line-height:1;letter-spacing:-.03em;font-weight:800}
+.end p{color:#d8d4cd;font-size:.95rem}
+.end .row{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.end .btn{text-align:center}.end .btn.ghostw{background:transparent;color:#fff;border-color:#fff}
+.end ul{list-style:none;display:grid;gap:6px;font-size:.9rem;color:#fff}.end li:before{content:"✓ ";color:#6fd39b;font-weight:800}
+
+.recmode .ctl,.recmode .hintline,.recmode .side>a.btn,.recmode .end .row{display:none!important}
+.recmode .stage{min-height:100vh;align-content:center}
+@media (max-width:820px){
+  .stage{grid-template-columns:1fr;gap:16px;padding:14px 14px 22px;align-content:start}
+  .side{order:2;gap:12px}
+  .big{display:none}
+  .capdesc{min-height:3.6em;font-size:1rem;max-width:none}
+  .phone{order:1}
+  .screen{height:600px;max-height:calc(100dvh - 190px);min-height:460px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+  <section class="side" aria-label="Legenda da animação">
+    <div class="brand">Mesa <i>iFood</i> · Hackathon Meteoro</div>
+    <h1 class="big"><span>Sente.</span><span>Coma.</span><span>Saia.</span></h1>
+    <div>
+      <div class="capstep" id="capstep">1/4 · Chegar e sentar</div>
+      <p class="capdesc" id="capdesc" aria-live="polite"></p>
+    </div>
+    <div class="ctl">
+      <div class="dots" id="dots" role="group" aria-label="Momentos da jornada"></div>
+      <button class="btn" id="pp" aria-label="Pausar ou continuar">Pausar</button>
+      <button class="btn" id="rs">Ver de novo</button>
+    </div>
+    <a class="btn pri" href="prototipo.html" style="align-self:flex-start">Testar o protótipo completo</a>
+    <p class="hintline">Toque nos números para pular de etapa. Tudo aqui é ilustrativo: restaurante, nomes e valores são fictícios.</p>
+  </section>
+
+  <div class="phone"><div class="screen entry" id="scr">
+    <div class="status"><span>12:08</span><span>●●● 5G</span></div>
+    <div class="apphead"><span class="logo">ifood</span><div><small id="hs">Bom almoço</small><b id="ht">Para você, agora</b></div></div>
+    <div class="prog" id="prog" aria-hidden="true"></div>
+    <div class="th" id="th"></div>
+    <div class="foot" id="foot">
+      <div id="orderslot"></div>
+      <div id="chipslot"></div>
+      <div class="field"><div class="txt" id="txt">Escreva ou fale com o assistente</div><span class="ic" id="mic">🎤</span><span class="ic send" id="snd">↑</span></div>
+    </div>
+    <div class="notif" id="notif"><small id="nt"></small><span id="nb"></span></div>
+    <div class="badge" id="badge">0 esperas<small>conta, garçom e maquininha</small></div>
+    <div class="end" id="end">
+      <h2>Sente.<br>Coma.<br>Saia.</h2>
+      <ul><li>0 esperas na jornada</li><li>Pagamento invisível: sem conta e sem maquininha</li><li>Funciona em qualquer PDV, com ou sem conta iFood</li></ul>
+      <div class="row"><a class="btn pri" href="prototipo.html">Testar o protótipo completo</a><button class="btn ghostw" id="again">Ver de novo</button></div>
+    </div>
+  </div></div>
+</main>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var th=$('th'), scr=$('scr'), txt=$('txt');
+  var NAMES=['Chegar e sentar','Pedir e pagar','Consumir','Sair'];
+  var DESC=[
+    'Abra o iFood: restaurantes pelo seu gosto e região. Ou escaneie o QR da mesa e o app abre direto.',
+    'Diga "o de sempre". O assistente paga com o VR e o Pix que já estão no seu app e manda o pedido direto à cozinha.',
+    'O garçom só leva a comida. Se algo vier errado, um toque em "Pedido errado" chama ele, que já sabe o que foi pago.',
+    'Sem conta e sem maquininha. Você terminou, a mesa é liberada e o recibo fica no app.'
+  ];
+  var N=NAMES.length;
+  if(/[?&]rec/.test(location.search)) document.body.classList.add('recmode');
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ANIM=true, run=0, paused=false, step=0, ended=false;
+  var IN=function(){return ANIM?' in':''};
+
+  function drawProg(i){
+    $('prog').innerHTML=NAMES.map(function(n,k){return '<i style="width:34px" class="'+(k<i?'done':(k===i?'cur':''))+'"></i>'}).join('')+'<span>'+(i+1)+'/'+N+' · '+NAMES[i]+'</span>';
+    $('capstep').textContent=(i+1)+'/'+N+' · '+NAMES[i]; $('capdesc').textContent=DESC[i];
+    document.querySelectorAll('#dots button').forEach(function(b,k){b.setAttribute('aria-current',k===i?'step':'false');b.classList.toggle('done',k<i)});
+  }
+  $('dots').innerHTML=NAMES.map(function(n,i){return '<button data-i="'+i+'" aria-label="'+(i+1)+'. '+n+'">'+(i+1)+'</button>'}).join('');
+
+  var H={
+    entry:function(){return '<div class="seg"><span class="on">Abrir o app</span><span>Escanear o QR da mesa</span></div><p class="s">Perto da Av. Paulista, com base no que você gosta: executivos e pratos sem frutos do mar.</p>'+
+      '<div class="rc act" id="rc1"><span class="ic" style="background:#b9101c">C</span><span><b>Cantina da Paulista</b><small>Executivo · 650 m · 2 mesas livres, sem fila · aceita VR</small></span></div>'+
+      '<div class="rc"><span class="ic" style="background:#1b8a4f">Q</span><span><b>Quilo &amp; Cia</b><small>Por quilo · 400 m · mesa para 3 em cerca de 8 min</small></span></div>'+
+      '<div class="rc" style="opacity:.55"><span class="ic" style="background:#c77a00">F</span><span><b>Forno Bela Vista</b><small>Comercial · 900 m · mesas livres</small></span></div>'+
+      '<div class="aibox"><b>IA</b> Ordenei por gosto, distância e mesas livres agora.</div>'},
+    welcome:function(seated){return '<div class="cardm'+IN()+'" id="welcome"><b>Cantina da Paulista · Mesa 12</b><small>Executivo · aceita VR · 2 mesas livres, sem fila</small>'+(seated?'<span class="okline">✓ Você está na Mesa 12</span>':'<span class="cta" id="seatbtn">Estou na Mesa 12</span>')+'<span class="mini">Opcional: convidar a turma por link</span></div>'},
+    ai:function(t){return '<div class="b a'+IN()+'">'+t+'</div>'},
+    user:function(t){return '<div class="b u'+IN()+'">'+t+'</div>'},
+    recs:function(){return '<div id="recs" class="'+(ANIM?'in':'')+'" style="display:flex;flex-direction:column;gap:8px"><div class="grp">Para você, agora</div>'+
+      '<div class="menuitem" id="sempre" style="border-color:var(--ai);background:#faf8ff"><span><em class="rec">O de sempre</em><b>Executivo de frango + suco de laranja</b><small>R$ 49,40 · você pede toda semana · pago com VR e Pix</small></span><button>Pedir</button></div>'+
+      '<div class="menuitem"><span><em class="rec">Prato do dia</em><b>Strogonofe de frango</b><small>R$ 36,90 · cabe no saldo</small></span><button>Adicionar</button></div>'+
+      '<div class="menuitem"><span><em class="rec">Para você, pelo seu gosto</em><b>Omelete de legumes</b><small>R$ 34,00 · cabe no saldo</small></span><button>Adicionar</button></div>'+
+      '<div class="grp">Ou responda à pergunta</div><div class="qchips"><span>Algo leve, sem camarão</span><span>Sem camarão, até R$ 38</span><span>Vegetariano</span></div></div>'},
+    confirm:function(){return '<div class="cardm'+IN()+'" id="confirm"><b>Confirme o seu pedido</b><div class="menuitem"><span><b>Executivo de frango</b><small>R$ 39,90</small></span><button>Remover</button></div><div class="menuitem"><span><b>Suco de laranja</b><small>R$ 9,50</small></span><button>Remover</button></div>'+
+      '<div class="sum"><span>Pedido</span><span>R$ 49,40</span></div><div class="sum"><span>Taxa de serviço sugerida (10%)</span><span>R$ 4,94</span></div><span class="linkbtn" id="tiplink">Não quero pagar a taxa</span><div class="sum big2"><span>Total</span><span>R$ 54,34</span></div>'+
+      '<div class="aibox"><b>Pagamento automático</b> VR (R$ 38,00) e Pix (R$ 16,34). <u>Mudar</u></div><small>Ao confirmar, eu pago e o pedido vai direto para a cozinha.</small><span class="cta full" id="confbtn">Confirmar e pagar R$ 54,34</span><span class="ghost">Voltar e editar</span><span class="linkbtn">Prefiro pagar no final (dinheiro ou maquininha)</span></div>'},
+    paid:function(){return '<div class="cardm ok'+IN()+'" id="paid"><b>✓ Pago e enviado à cozinha</b><div class="receipt"><div class="row"><span>Executivo de frango</span><span>39,90</span></div><div class="row"><span>Suco de laranja</span><span>9,50</span></div><div class="row"><span>Taxa de serviço (10%)</span><span>4,94</span></div><div class="row tot"><span>Total pago</span><span>54,34</span></div></div><small>Pago com VR (R$ 38,00) e Pix (R$ 16,34)</small><span class="ghost" id="wrongbtn">Pedido errado? Chamar o garçom</span></div>'},
+    done:function(stars){return '<div class="cardm'+IN()+'" id="done"><div class="done"><div class="check">✓</div><b>Tudo pago. Mesa liberada.</b></div><div class="receipt"><div class="who">Você (Ana) · pago</div><div class="row"><span>Executivo de frango</span><span>39,90</span></div><div class="row"><span>Suco de laranja</span><span>9,50</span></div><div class="row tot"><span>Você pagou</span><span>54,34</span></div></div>'+
+      '<div class="stars" id="stars">'+[1,2,3,4,5].map(function(i){return '<i class="'+(stars>=i?'on':'')+'">★</i>'}).join('')+'</div><div class="aibox"><b>IA</b> Amanhã é só dizer "o de sempre": eu peço e pago em 2 toques. Nota fiscal no app e cashback do Clube iFood aplicado (exemplo).</div></div>'}
+  };
+  var A1='Oi! Que bom ter você aqui na Mesa 12. Aqui você não precisa pedir a conta: eu pago quando você confirmar o pedido, com o que já está no seu app. Hoje seu saldo de almoço é R$ 38,00 (valor ilustrativo).';
+  var A2='O que você está a fim de comer hoje? Pode escrever, falar, ou pedir "o de sempre".';
+  var A3='Boa! O de sempre: Executivo de frango e suco de laranja. Já deixei tudo pronto: é só confirmar que eu pago e mando para a cozinha.';
+  var A4='Prontinho! Paguei R$ 54,34 com seu VR e Pix e já mandei para a cozinha, cerca de 12 min. O garçom só leva o prato. Se algo estiver errado no pedido, toque em "Pedido errado".';
+  var A5='Desculpa por isso! Chamei o garçom. Ele já viu o que você pediu e o que foi pago, e chega em instantes para acertar.';
+  var A6='Que bom que você curtiu! Tudo está pago e sua mesa já foi liberada. Obrigada pela visita, volte amanhã.';
+
+  function chatMode(on){scr.classList.toggle('entry',!on); $('hs').textContent=on?'Cantina da Paulista':'Bom almoço'; $('ht').textContent=on?'Assistente · Mesa 12':'Para você, agora'}
+  function setChips(on){$('chipslot').innerHTML=on?'<div class="qchips'+IN()+'"><span>Pedir mais</span><span>Chamar garçom</span><span id="chipDone">Já terminei</span></div>':''}
+  function setTxt(t){txt.textContent=t||'Escreva ou fale com o assistente'; txt.classList.toggle('has',!!t)}
+  function prep(k){
+    var a=ANIM; ANIM=false; var h='';
+    $('orderslot').innerHTML=''; setChips(false); setTxt('');
+    $('notif').classList.remove('show'); $('badge').classList.remove('show'); $('end').classList.remove('show');
+    if(k<=0){chatMode(false); h=H.entry()}
+    else{
+      chatMode(true);
+      h=H.welcome(true)+H.user('Estou na Mesa 12')+H.ai(A1)+H.ai(A2);
+      if(k===1) h+=H.recs();
+      if(k>=2){h+=H.user('O de sempre')+H.ai(A3)+H.paid()+H.ai(A4); setChips(true)}
+      if(k>=3){h+=H.user('Pedido errado')+H.ai(A5)}
+      if(k>=4){h+=H.user('terminei, pode liberar a mesa')+H.ai(A6)+H.done(5); setChips(false)}
+    }
+    th.innerHTML=h; th.scrollTop=th.scrollHeight; ANIM=a;
+  }
+
+  function mkWait(id){return function(ms){return new Promise(function(res,rej){
+    var left=ms; (function tick(){ if(id!==run) return rej('x'); if(paused){return setTimeout(tick,120)} if(left<=0) return res(); left-=50; setTimeout(tick,50)})()})}}
+  function add(html){th.insertAdjacentHTML('beforeend',html); th.scrollTop=th.scrollHeight}
+  function rm(sel){var e=th.querySelector(sel); if(e&&e.parentNode) e.parentNode.removeChild(e)}
+  function tap(sel){var el=document.querySelector(sel); if(!el) return; var r=el.getBoundingClientRect(), sr=scr.getBoundingClientRect();
+    var d=document.createElement('div'); d.className='ripple'; d.style.left=(r.left-sr.left+Math.min(r.width/2,60))+'px'; d.style.top=(r.top-sr.top+r.height/2)+'px'; scr.appendChild(d); setTimeout(function(){d.remove()},800);
+    el.classList.add('press'); setTimeout(function(){el.classList.remove('press')},260)}
+  function notif(t,b){$('nt').textContent=t; $('nb').textContent=b; $('notif').classList.add('show')}
+  function hideNotif(){$('notif').classList.remove('show')}
+  async function type(t,w,speed){for(var i=1;i<=t.length;i++){setTxt(t.slice(0,i)); await w(speed||45)}}
+  async function think(w){add('<div class="listen in" id="thk">Pensando…</div>'); await w(700); rm('#thk')}
+
+  var SC=[
+    async function(w){ prep(0); drawProg(0); await w(1800); tap('#rc1'); await w(800);
+      chatMode(true); th.innerHTML=''; add(H.welcome(false)); drawProg(0); await w(1400); tap('#seatbtn'); await w(500);
+      th.innerHTML=''; ANIM=false; add(H.welcome(true)); ANIM=true; add(H.user('Estou na Mesa 12')); await w(600); add(H.ai(A1)); await w(1500); add(H.ai(A2)); await w(500); add(H.recs()); await w(1600)},
+    async function(w){ drawProg(1); tap('#sempre'); await w(600); rm('#recs'); add(H.user('O de sempre')); await think(w); add(H.ai(A3)); await w(500); add(H.confirm()); await w(2200);
+      $('tiplink').classList.add('pulse'); await w(1300); tap('#confbtn'); await w(700); rm('#confirm'); add(H.paid()); await w(900); add(H.ai(A4)); setChips(true); await w(2600)},
+    async function(w){ drawProg(2); notif('App do Garçom','Prato pronto: levar à Mesa 12'); await w(2400); hideNotif(); await w(700);
+      tap('#wrongbtn'); await w(600); add(H.user('Pedido errado')); await w(500); add(H.ai(A5)); notif('App do Garçom','Mesa 12 chamou: pedido possivelmente errado. Veja o que foi pedido e pago.'); await w(3400); hideNotif(); await w(500)},
+    async function(w){ drawProg(3); setChips(false); await type('terminei, pode liberar a mesa',w,40); await w(300); tap('#snd'); await w(300); add(H.user('terminei, pode liberar a mesa')); setTxt(''); await think(w); add(H.ai(A6)); await w(500); add(H.done(0)); await w(1000);
+      for(var i=1;i<=5;i++){var st=document.querySelectorAll('#stars i'); if(st[i-1]) st[i-1].classList.add('on'); await w(220)}
+      await w(700); $('badge').innerHTML='Sem conta<br>sem maquininha<small>você nem percebeu que pagou</small>'; $('badge').classList.add('show'); await w(3200); $('badge').classList.remove('show'); await w(500)}
+  ];
+
+  async function play(from){
+    run++; var id=run, w=mkWait(id); ended=false; $('end').classList.remove('show'); paused=false; $('pp').textContent='Pausar';
+    try{
+      for(var i=from;i<SC.length;i++){ step=i; if(i===from&&from>0) prep(i); drawProg(i); await SC[i](w); }
+      await w(300); $('end').classList.add('show'); ended=true; $('pp').textContent='Ver de novo'; drawProg(N-1);
+    }catch(e){ if(e!=='x') console.error(e) }
+  }
+  function jump(k){ run++; ANIM=true; if(reduce){ prep(k+1); drawProg(k); step=k; return } play(k) }
+
+  $('dots').addEventListener('click',function(e){var b=e.target.closest('button'); if(b) jump(+b.dataset.i)});
+  $('pp').addEventListener('click',function(){ if(ended){play(0); return} paused=!paused; $('pp').textContent=paused?'Continuar':'Pausar' });
+  $('rs').addEventListener('click',function(){play(0)});
+  $('again').addEventListener('click',function(){play(0)});
+  if(reduce){ prep(1); drawProg(0); $('pp').style.display='none'; $('rs').style.display='none' } else play(0);
+})();
+</script>
+</body>
+</html>

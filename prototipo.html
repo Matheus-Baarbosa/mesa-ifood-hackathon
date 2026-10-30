@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mesa iFood · Hackathon Meteoro · Squad 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1d1b1a; --ink2:#55514d; --red:#ea1d2c; --red-d:#b9101c;
+  --stone:#ebeae6; --paper:#f8f6f1; --line:#d4d1ca; --ok:#1b8a4f; --warn:#c77a00; --ai:#5b3fd1; --ai-bg:#f1edff;
+  --display:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--display);color:var(--ink);background:var(--stone);line-height:1.55;font-size:17px;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+h1,h2,h3{line-height:1.05;letter-spacing:-.02em;font-weight:800}
+h1{font-size:clamp(3rem,8vw,6.2rem)}
+h2{font-size:clamp(1.9rem,4vw,3rem);max-width:20ch}
+h3{font-size:1.2rem;letter-spacing:-.01em;line-height:1.2}
+p{max-width:64ch}
+.lead{font-size:1.2rem;color:var(--ink2);margin-top:22px}
+section{padding:92px 0}
+.sec-head{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:44px}
+.sec-head p{color:var(--ink2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:2px 7px;border:1px solid currentColor;border-radius:3px;vertical-align:middle;margin-left:6px;white-space:nowrap}
+.t-br{color:var(--ok)} .t-ex{color:var(--warn)} .t-es{color:var(--red-d)}
+.ai-tag{display:inline-block;background:var(--ai);color:#fff;font-weight:700;font-size:.7rem;padding:1px 7px;border-radius:99px;vertical-align:middle;margin-left:6px}
+
+.bar{position:sticky;top:0;z-index:20;background:rgba(235,234,230,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:56px;gap:20px}
+.brand{font-weight:800;letter-spacing:-.02em;white-space:nowrap}
+.brand i{font-style:normal;color:var(--red)}
+.bar nav{display:flex;gap:18px;font-size:.92rem;overflow-x:auto}
+.bar nav a{text-decoration:none;color:var(--ink2);white-space:nowrap}
+.bar nav a:hover{color:var(--ink)}
+
+.hero{padding:56px 0 88px}
+.hero .grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.hero h1 span{display:block}
+.hero .ask{margin-top:28px;border-left:6px solid var(--red);padding:2px 0 2px 18px;font-size:1.12rem;max-width:42ch}
+.hero .meta{margin-top:22px;color:var(--ink2);font-size:.92rem}
+
+/* phone */
+.demo{display:flex;flex-direction:column;align-items:center;gap:14px}
+.modes{display:flex;gap:6px;background:#dcdad5;padding:4px;border-radius:99px}
+.modes button{border:0;background:transparent;font:700 .85rem var(--display);padding:7px 14px;border-radius:99px;cursor:pointer;color:var(--ink2)}
+.modes button[aria-pressed=true]{background:var(--ink);color:#fff}
+.phone{width:340px;background:var(--ink);border-radius:42px;padding:11px;box-shadow:0 30px 60px -28px rgba(0,0,0,.55)}
+.screen{background:#fff;border-radius:32px;height:690px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.status{display:flex;justify-content:space-between;padding:12px 22px 4px;font-size:.78rem;font-weight:700;flex:none}
+.apphead{display:flex;align-items:center;gap:10px;padding:8px 18px 12px;border-bottom:1px solid #eee;flex:none}
+.logo{background:var(--red);color:#fff;font-weight:800;border-radius:8px;padding:2px 8px;font-size:.95rem;letter-spacing:-.03em}
+.apphead small{display:block;color:#777;font-size:.74rem;line-height:1.2}
+.apphead b{font-size:.92rem;line-height:1.2}
+.url{margin:6px 14px 8px;background:#f0f0f0;border-radius:10px;padding:7px 12px;font-size:.78rem;color:#444;display:flex;justify-content:space-between;flex:none}
+.body{flex:1;min-height:0;display:flex;flex-direction:column;padding:12px 16px 14px}
+.scroll{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:8px}
+.foot{flex:none;display:flex;flex-direction:column;gap:8px;padding-top:8px;border-top:1px solid #f0f0f0}
+.body h4{font-size:1.18rem;letter-spacing:-.02em;line-height:1.15}
+.body p.s{font-size:.83rem;color:#666;line-height:1.4}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1.5px solid #e3e3e3;border-radius:12px;padding:9px 12px;cursor:pointer;font-size:.84rem;line-height:1.3}
+.opt input{margin-top:3px;accent-color:var(--red)}
+.opt b{display:block;font-size:.9rem}
+.opt:has(input:checked){border-color:var(--red);background:#fff4f4}
+.grp{font-size:.74rem;font-weight:700;color:#777;margin-top:2px}
+.note{font-size:.79rem;background:#fff7e6;border:1px solid #f0d9a8;border-radius:10px;padding:8px 11px;line-height:1.35}
+.note.al{background:#ffe9ea;border-color:#f3b9bd;color:#7a0b14}
+.aibox{font-size:.8rem;background:var(--ai-bg);border:1px solid #d9d0fb;border-radius:12px;padding:9px 11px;line-height:1.38;color:#2f2170}
+.aibox b{color:var(--ai)}
+.cta{border:0;background:var(--red);color:#fff;font:700 1rem var(--display);padding:14px;border-radius:14px;cursor:pointer;width:100%;flex:none}
+.cta:hover{background:var(--red-d)}
+.cta:disabled{background:#ccc;cursor:not-allowed}
+.ghost{border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:700 .88rem var(--display);padding:10px;border-radius:12px;cursor:pointer;width:100%;flex:none}
+.receipt{background:var(--paper);border:1px solid #e4e0d6;border-radius:6px;padding:11px 12px 9px;font-family:var(--mono);font-size:.72rem;line-height:1.5;flex:none}
+.receipt .who{margin-top:6px;font-weight:500;border-top:1px dashed #b9b4a8;padding-top:4px}
+.receipt .who:first-child{margin-top:0;border-top:0;padding-top:0}
+.receipt .row{display:flex;justify-content:space-between;gap:8px}
+.receipt .tot{border-top:1px dashed #b9b4a8;margin-top:6px;padding-top:5px;font-weight:500}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:#efefef;border-radius:12px;padding:3px;flex:none}
+.seg button,.chips button{border:0;background:transparent;font:600 .84rem var(--display);padding:8px;border-radius:10px;cursor:pointer;color:#555}
+.seg button[aria-pressed=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;flex:none}
+.chips button{border:1.5px solid #e0e0e0;padding:8px 4px}
+.chips button[aria-pressed=true]{border-color:var(--red);background:#fff4f4;color:var(--red-d)}
+.lbl{font-size:.78rem;font-weight:700;color:#444}
+.sum{display:flex;justify-content:space-between;font-size:.86rem}
+.sum.big{font-size:1.1rem;font-weight:800;border-top:1px solid #e8e8e8;padding-top:7px}
+.done{text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;flex:none}
+.check{width:54px;height:54px;border-radius:50%;background:var(--ok);display:grid;place-items:center;color:#fff;font-size:1.7rem;animation:pop .45s cubic-bezier(.2,1.4,.4,1)}
+.check.wait{background:var(--warn)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.stepper{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;max-width:440px}
+.stepper button{font:600 .8rem var(--display);padding:6px 10px;border-radius:99px;border:1.5px solid var(--ink);background:transparent;cursor:pointer;color:var(--ink)}
+.stepper button[aria-current=step]{background:var(--ink);color:#fff}
+.hint{font-size:.84rem;color:var(--ink2);text-align:center;max-width:38ch}
+.status-pill{align-self:flex-start;font-size:.76rem;font-weight:700;background:#dff3e8;color:#0d6b39;border-radius:99px;padding:3px 10px}
+
+/* discover */
+.rcard{display:flex;gap:11px;align-items:center;border:1.5px solid #e6e6e6;border-radius:14px;padding:10px;text-align:left;background:#fff;width:100%;font-family:var(--display);cursor:default}
+.rcard .ic{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.1rem;flex:none}
+.rcard b{display:block;font-size:.92rem;line-height:1.2}
+.rcard small{display:block;color:#666;font-size:.76rem;line-height:1.3}
+.rcard.act{border-color:var(--red);cursor:pointer;box-shadow:0 0 0 3px #ffe3e5}
+.rcard.dim{opacity:.55}
+.qr{border:2px dashed #bbb;border-radius:16px;height:170px;display:grid;place-items:center;text-align:center;font-size:.85rem;color:#555;flex:none;background:#fafafa}
+.qr i{display:block;width:84px;height:84px;margin:0 auto 8px;background:
+  linear-gradient(90deg,#1d1b1a 0 20%,transparent 20% 40%,#1d1b1a 40% 60%,transparent 60% 80%,#1d1b1a 80%) 0 0/100% 25%,
+  repeating-linear-gradient(0deg,#1d1b1a 0 8px,#fff 8px 16px);border-radius:6px;opacity:.85}
+
+/* chat */
+.b{max-width:90%;padding:8px 11px;border-radius:14px;font-size:.84rem;line-height:1.38}
+.b.u{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.b.a{align-self:flex-start;background:var(--ai-bg);color:#2f2170;border-bottom-left-radius:4px}
+.qchips{display:flex;flex-wrap:wrap;gap:6px}
+.qchips button{border:1.5px solid #d9d0fb;background:#fff;color:#3a2a9a;font:600 .78rem var(--display);padding:6px 10px;border-radius:99px;cursor:pointer}
+.qchips button:hover{background:var(--ai-bg)}
+.menuitem{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1.5px solid #e6e6e6;border-radius:12px;padding:8px 10px;font-size:.83rem;background:#fff}
+.menuitem small{display:block;color:#666;font-size:.74rem;line-height:1.3}
+.menuitem button{border:1.5px solid var(--red);color:var(--red-d);background:#fff;font:700 .78rem var(--display);padding:6px 10px;border-radius:10px;cursor:pointer;white-space:nowrap}
+.menuitem button.on{background:var(--red);color:#fff}
+.inrow{display:flex;gap:6px;flex:none}
+.inrow input{flex:1;min-width:0;border:1.5px solid #ddd;border-radius:12px;padding:9px 11px;font:500 .85rem var(--display)}
+.inrow button{border:1.5px solid var(--ai);background:#fff;color:var(--ai);border-radius:12px;font:700 .8rem var(--display);padding:0 11px;cursor:pointer;flex:none}
+.inrow button.send{background:var(--ai);color:#fff}
+.listen{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--ai);font-weight:700}
+.wave{display:flex;gap:3px;align-items:center;height:18px}
+.wave i{display:block;width:3px;background:var(--ai);border-radius:2px;animation:w .8s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:.1s}.wave i:nth-child(3){animation-delay:.2s}.wave i:nth-child(4){animation-delay:.3s}.wave i:nth-child(5){animation-delay:.4s}
+@keyframes w{0%,100%{height:4px}50%{height:18px}}
+.mini{border:1.5px solid var(--red);color:var(--red-d);background:#fff;font:700 .74rem var(--display);padding:6px 9px;border-radius:10px;cursor:pointer;white-space:nowrap;flex:none}
+.mini.on{background:#dff3e8;border-color:#1b8a4f;color:#0d6b39}
+.simbtn{border:1.5px dashed var(--ai);color:var(--ai);background:#fff;font:700 .84rem var(--display);padding:9px 14px;border-radius:12px;cursor:pointer;max-width:340px}
+.simbtn:disabled{opacity:.6;cursor:default}
+.viewpill{align-self:flex-start;font-size:.74rem;font-weight:700;background:var(--ink);color:#fff;border-radius:99px;padding:3px 10px}
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:34px}
+.layer{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px}
+.layer b{display:block;font-size:1.05rem;margin-bottom:4px}
+.layer span{color:var(--ink2);font-size:.93rem}
+.linkbtn{border:0;background:transparent;color:var(--ink2);font:600 .8rem var(--display);text-decoration:underline;cursor:pointer;padding:2px 0;align-self:flex-start}
+.back{border:0;background:transparent;color:var(--red-d);font:700 .84rem var(--display);cursor:pointer;align-self:flex-start;padding:2px 0}
+.btnrow{display:flex;gap:8px;flex:none}.btnrow .ghost{flex:1}
+.two-btn{display:flex;gap:8px}.two-btn .ghost{flex:1}
+.modalwrap{position:absolute;inset:0;background:rgba(0,0,0,.5);display:grid;place-items:center;padding:20px;z-index:5;border-radius:32px}
+.modal{background:#fff;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px}
+.modal h4{font-size:1.1rem;letter-spacing:-.02em}
+.modal p{font-size:.85rem;color:#444;line-height:1.4}
+.ppl{display:flex;align-items:center;gap:6px;font-size:.84rem}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--ink);color:#fff;display:inline-grid;place-items:center;font-size:.74rem;font-weight:800;flex:none}
+.amtrow{display:flex;align-items:center;gap:8px;font-size:.86rem}
+.amtrow .nm{flex:1;min-width:0}
+.amt{display:flex;align-items:center;gap:4px;border:1.5px solid #ddd;border-radius:10px;padding:5px 8px;font-size:.84rem}
+.amt input{width:64px;border:0;font:700 .86rem var(--display);text-align:right;outline:none}
+.stepn{display:flex;align-items:center;gap:8px;font-size:.84rem;flex:none}
+.stepn button{width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);background:#fff;font:700 1rem var(--display);cursor:pointer}
+.stepn b{min-width:18px;text-align:center}
+.rec{display:inline-block;font-style:normal;font-size:.68rem;font-weight:800;color:var(--ai);background:var(--ai-bg);border-radius:99px;padding:1px 8px;margin-bottom:2px}
+.inrow button.send{font-size:1.1rem;width:40px}
+.cardm{border:1.5px solid #e6e6e6;border-radius:14px;padding:11px;display:flex;flex-direction:column;gap:8px;background:#fff;font-size:.84rem;align-self:stretch}
+.cardm b{font-size:.92rem;line-height:1.25}
+.cardm small{color:#666;font-size:.77rem;line-height:1.35}
+.cardm.ok{background:#f3faf6;border-color:#cfe8da}
+.okline{font-size:.8rem;font-weight:700;color:#0d6b39}
+.alline{font-size:.76rem;font-weight:700;color:#7a0b14}
+.cta.sm{padding:9px 12px;font-size:.88rem;width:auto;align-self:flex-start}
+.orderbar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.84rem;font-weight:700;background:#fff4f4;border:1.5px solid #f3b9bd;border-radius:12px;padding:6px 6px 6px 12px;flex:none}
+.prog{display:flex;align-items:center;gap:4px;padding:6px 18px 8px;font-size:.74rem;color:#666;flex:none}
+.prog i{width:22px;height:4px;border-radius:3px;background:#e2e2e2;display:block}
+.prog i.done{background:var(--ok)} .prog i.cur{background:var(--red)}
+.prog span{margin-left:6px;font-weight:700;color:#444}
+.stars{display:flex;gap:4px;justify-content:center;flex:none}
+.stars button{border:0;background:transparent;font-size:1.5rem;cursor:pointer;color:#ccc;line-height:1}
+.stars button.on{color:#f5a623}
+
+/* blocks */
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--ink)}
+.cols3>div{padding:22px 26px 26px 0;border-right:1px solid var(--line);margin-right:26px}
+.cols3>div:last-child{border-right:0;margin-right:0}
+.cols3 h3{margin-bottom:8px}
+.cols3 p{color:var(--ink2);font-size:.98rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+
+.changes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.change{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 14px;font-size:.9rem;display:flex;flex-direction:column;gap:8px}
+.change .q{color:var(--ink2);border-left:3px solid var(--red);padding-left:9px;font-size:.84rem}
+.change b{font-size:.95rem;line-height:1.25}
+
+.mentors{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.mentor{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px}
+.mentor .ask2{font-size:.92rem;color:var(--ink2);border-left:4px solid var(--red);padding-left:12px}
+.mentor .ans{font-size:.98rem}
+.mentor a{font-weight:700;text-decoration:none;color:var(--red-d);margin-top:auto}
+.mentor a:hover{text-decoration:underline}
+.mentor .n{font-weight:800;font-size:.82rem;color:#fff;background:var(--ink);width:26px;height:26px;border-radius:50%;display:grid;place-items:center}
+
+.hbar{display:flex;flex-direction:column;gap:10px;margin:8px 0 6px}
+.hbar .r{display:grid;grid-template-columns:210px 1fr;gap:12px;align-items:center;font-size:.92rem}
+.hbar .track{background:#dcdad5;border-radius:5px;height:30px}
+.hbar .fill{height:100%;border-radius:5px;background:var(--ink);display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:700;font-size:.82rem}
+.hbar .fill.red{background:var(--red)} .hbar .fill.grey{background:#8c8780}
+
+.tablewrap{overflow-x:auto;border-radius:10px;border:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:.93rem}
+th,td{text-align:left;padding:12px 15px;border-bottom:1px solid #eee;vertical-align:top}
+th{background:var(--ink);color:#fff;font-weight:700;font-size:.86rem}
+td:first-child{font-weight:700}
+tr:last-child td{border-bottom:0}
+.sev{font-weight:700;font-size:.82rem;padding:2px 9px;border-radius:99px;white-space:nowrap}
+.sev.alta{background:#ffe3e5;color:var(--red-d)} .sev.media{background:#fff0cf;color:#8a5600}
+
+.verdict{margin-top:26px;background:var(--ink);color:#fff;border-radius:14px;padding:24px 26px}
+.verdict h3{margin-bottom:8px}
+.verdict p{color:#e3dfd8;max-width:80ch}
+.verdict .pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.verdict .pills span{background:rgba(255,255,255,.12);border-radius:99px;padding:5px 12px;font-size:.88rem}
+
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;counter-reset:f;list-style:none;margin-top:18px}
+.flow li{counter-increment:f;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 14px;position:relative;font-size:.92rem}
+.flow li:before{content:counter(f);position:absolute;top:-12px;left:12px;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;font-weight:800;display:grid;place-items:center;font-size:.8rem}
+.flow li b{display:block;margin:4px 0 2px}
+.ladder{list-style:none;border-left:3px solid var(--red);margin-top:6px}
+.ladder li{padding:14px 0 14px 22px;position:relative;border-bottom:1px solid var(--line)}
+.ladder li:last-child{border-bottom:0}
+.ladder li:before{content:"";position:absolute;left:-9px;top:20px;width:15px;height:15px;border-radius:50%;background:var(--red);border:3px solid var(--stone)}
+.ladder b{display:block}
+.ladder span{color:var(--ink2);font-size:.95rem}
+
+.panel{background:#fff;border-radius:14px;border:1px solid var(--line);overflow:hidden}
+.panel header{background:var(--ink);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;font-weight:700;gap:10px}
+.alert{padding:12px 18px;background:#ffe3e5;color:#7a0b14;font-weight:700;font-size:.92rem;border-bottom:1px solid #f3b9bd}
+.alert.calm{background:#f1f1ef;color:#666;font-weight:500}
+.alert.ok{background:#dff3e8;color:#0d6b39}
+.mesa{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-top:1px solid #eee;gap:12px}
+.mesa b{min-width:78px}
+.pill{font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:99px;background:#eee;color:#444;white-space:nowrap}
+.pill.ok{background:#dff3e8;color:#0d6b39}
+.pill.go{background:#ffe3e5;color:var(--red-d)}
+.pill.wait{background:#fff0cf;color:#8a5600}
+.mesa.me{background:#fff9f9}
+.mesa small{color:#777;display:block;font-weight:400;font-size:.8rem}
+.tl{padding:14px 18px 6px;border-top:1px solid #eee}
+.tl h4{font-size:.95rem;margin-bottom:8px}
+.tl ol{list-style:none;border-left:2px solid #ddd;margin-left:5px}
+.tl li{padding:0 0 10px 16px;position:relative;font-size:.86rem;line-height:1.35}
+.tl li:before{content:"";position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:var(--red)}
+.tl li span{font-family:var(--mono);color:#777;font-size:.76rem;margin-right:6px}
+.panel .ailine{padding:11px 18px;background:var(--ai-bg);color:#2f2170;font-size:.86rem;border-top:1px solid #d9d0fb}
+.checks{list-style:none;display:grid;gap:10px}
+.checks li{padding-left:26px;position:relative;color:var(--ink2);font-size:.98rem}
+.checks li:before{content:"";position:absolute;left:2px;top:.55em;width:12px;height:6px;border-left:3px solid var(--ok);border-bottom:3px solid var(--ok);transform:rotate(-45deg)}
+
+.calc{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px}
+.calc .r{display:flex;justify-content:space-between;gap:18px;padding:8px 0;border-bottom:1px dashed #c9c4b8;font-family:var(--mono);font-size:.86rem}
+.calc .r.t{font-weight:500;font-size:.95rem;border-top:2px solid var(--ink);margin-top:6px;border-bottom:0}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.metric{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.metric b{font-size:1.5rem;letter-spacing:-.02em;display:block}
+.metric span{font-size:.88rem;color:var(--ink2)}
+.dark{background:var(--ink);color:#fff}
+.dark p{color:#d8d4cd}
+.pitch{font-size:clamp(1.2rem,2.2vw,1.6rem);line-height:1.4;letter-spacing:-.01em;font-weight:500;max-width:50ch}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+.qa div{border-top:3px solid var(--red);padding-top:12px;font-size:.95rem;color:#d8d4cd}
+.qa b{display:block;color:#fff;margin-bottom:4px}
+footer{padding:44px 0 70px;font-size:.86rem;color:var(--ink2)}
+footer p{margin-bottom:10px;max-width:90ch}
+
+@media (max-width:1000px){
+  .changes{grid-template-columns:1fr 1fr}
+}
+@media (max-width:920px){
+  .hero .grid,.two,.sec-head,.mentors{grid-template-columns:1fr}
+  .cols3,.metrics,.qa,.flow,.changes,.layers{grid-template-columns:1fr}
+  .cols3>div{border-right:0;margin-right:0;border-bottom:1px solid var(--line)}
+  .hbar .r{grid-template-columns:1fr}
+  section{padding:64px 0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="bar"><div class="wrap">
+  <span class="brand">Mesa <i>iFood</i></span>
+  <nav aria-label="Seções">
+    <a href="#demo">Protótipo</a><a href="#ajustes">Ajustes</a><a href="#mentores">Mentores</a><a href="#publico">Público</a><a href="#jornada">Jornada</a><a href="#reserva">Reserva</a><a href="#ia">IA</a><a href="#garcom">Garçom</a><a href="#pdv">Outros PDVs</a><a href="#pagamento">Pagamento</a><a href="#custos">Custos</a><a href="#riscos">Riscos</a><a href="#pitch">Pitch</a>
+  </nav>
+</div></div>
+
+<header class="hero" id="demo"><div class="wrap grid">
+  <div>
+    <h1><span>Sente.</span><span>Coma.</span><span>Saia.</span></h1>
+    <p class="ask">Como criamos o "Sem Parar" dos restaurantes? Você escolhe o restaurante no app, ou escaneia o QR da mesa. Depois, tudo acontece numa conversa com um assistente de IA, como um assistente pessoal. O pagamento vem antes e é invisível: ao confirmar o pedido, o assistente paga com o que já está no seu app e o pedido vai direto à cozinha. Não existe conta.</p>
+    <p class="meta">Hackathon Meteoro · Squad 4 · Payments Core · 30/10/2026<br>Protótipo ilustrativo: restaurantes, nomes e valores são fictícios.</p>
+    <p class="meta" style="margin-top:18px;color:var(--ink)"><b>Como usar:</b> há só duas telas, a entrada e a conversa. Na entrada, teste <b>Abrir o app</b> e <b>Escanear o QR</b>. Na conversa, toque em <b>O de sempre</b> (2 toques até estar pago), ou escreva e use o microfone. Veja o cartão "Pago e enviado à cozinha" e o botão "Pedido errado". As etapas abaixo do celular pulam para cada momento. O botão <b>Sem iFood</b> mostra a jornada de quem não tem o app.</p>
+  </div>
+  <div class="demo">
+    <div class="modes" role="group" aria-label="Modo do protótipo"><button data-mode="ifood" aria-pressed="true">Com iFood</button><button data-mode="web" aria-pressed="false">Sem iFood</button></div>
+    <div class="phone"><div class="screen" id="screen" aria-live="polite"></div></div>
+    <div class="stepper" id="stepper" role="group" aria-label="Momentos da jornada"></div>
+    <div id="simwrap"></div>
+    <p class="hint">Uma conversa só, com pagamento invisível. O app do garçom, mais abaixo, muda junto.</p>
+  </div>
+</div></header>
+
+<section id="ajustes" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Ajustes do time nesta versão da jornada</h2>
+    <p>Seis mudanças pedidas pelo time. Cada uma já está no protótipo, e abaixo vai como a pedimos e como ficou.</p>
+  </div>
+  <p style="background:#fff7e6;border:1px solid #f0d9a8;border-radius:10px;padding:12px 16px;margin-bottom:22px;max-width:none"><b>Atualização:</b> a quarta rodada, mais abaixo, inverteu a lógica do pagamento. Os itens das primeiras rodadas sobre "pagamento só no final", "fechar a conta" e "divisão" foram substituídos: o assistente paga ao confirmar o pedido, a taxa de serviço passou para o cartão de confirmação, e cada pessoa paga o que pede.</p>
+  <div class="changes">
+    <div class="change"><p class="q">Ao abrir o iFood, um leque de restaurantes com base no que a pessoa gosta e na região, para já escolher. Ou ir direto e abrir o app pelo QR da mesa.</p><b>Duas portas de entrada</b><span>Passo 1: "Para você, agora" e "Escanear o QR da mesa".</span></div>
+    <div class="change"><p class="q">Escolher o método de pagamento só no final. Se for de fora do app, o garçom já é avisado.</p><b>Pagamento antes do pedido</b><span>Revisto na quarta rodada: o assistente paga ao confirmar. Fora do app, o garçom é avisado.</span></div>
+    <div class="change"><p class="q">A IA não só com botões: mostrar o cardápio a partir de uma pergunta norteadora, respondida por texto ou áudio.</p><b>Pergunta guia, texto ou voz</b><span>Passo 2: o assistente pergunta, entende e monta o cardápio.</span></div>
+    <div class="change"><p class="q">Nem precisa do garçom confirmar: o cliente confirma e envia direto à cozinha. O garçom só leva a comida.</p><b>Pedido direto à cozinha</b><span>Passo 2: "Confirmar e pagar". O garçom só recebe "levar".</span></div>
+    <div class="change"><p class="q">Quando o garçom é chamado, um app de controle (extensão da Saipos) mostra o que aconteceu na mesa.</p><b>Resumo da mesa para o garçom</b><span>Seção "Garçom": linha do tempo da Mesa 12.</span></div>
+    <div class="change"><p class="q">Em horário cheio de almoço: como fica a reserva, várias pessoas na mesma mesa ou só entrando e sentando, e como saber que as 3 pessoas estão juntas, sem aumentar a fricção.</p><b>Mesa compartilhada e fila opcional</b><span>Seção "Reserva". No celular, use "Simular: Bia e Caio chegam".</span></div>
+  </div>
+  <h3 style="margin:44px 0 12px">Segunda rodada de ajustes do time</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Ajuste pedido</th><th>Como ficou</th><th>Onde ver no celular</th></tr>
+    <tr><td>Botão de voltar para pedir mais, na tela onde o prato foi enviado</td><td>"Pedir mais" ao lado de "Chamar garçom". O pedido anterior fica registrado e o novo vai em outra rodada.</td><td>Passo 3, depois de enviar um pedido</td></tr>
+    <tr><td>Divisão por quantidade de pessoas, com valor editável e botão "fazer a boa"</td><td>Mostra quantas pessoas estão na mesa, deixa ajustar o número de pessoas e editar o valor de cada uma. "Eu pago" e "Fazer a boa: pagar a mesa toda" cobrem a parte de alguém.</td><td>Passo 4, com Bia e Caio na mesa</td></tr>
+    <tr><td>Taxa de serviço sem escolher porcentagem: link "Não quero pagar a taxa", com popup</td><td>A taxa sugerida de 10% aparece fixa. O link abre um popup curto que explica para que ela serve, com "Manter" e "Tirar" de mesmo destaque.</td><td>Passo 5</td></tr>
+    <tr><td>Recomendações do dia no chat</td><td>Três cartões antes da pergunta: prato do dia, mais pedido hoje e uma sugestão pelo gosto do cliente.</td><td>Passo 2, ao abrir o assistente</td></tr>
+    <tr><td>Dois botões de enviar, pouco claros</td><td>O envio de mensagem virou uma seta (↑) no campo de texto. O botão grande agora é "Revisar pedido".</td><td>Passo 2</td></tr>
+    <tr><td>Confirmar antes de enviar à cozinha</td><td>Cartão de confirmação no chat, com os itens, o total e a alergia, e os botões "Confirmar e enviar à cozinha" ou "Voltar e editar".</td><td>Passo 2, depois de "Revisar pedido"</td></tr>
+    <tr><td>Fechando a conta mais clara</td><td>Três opções com explicação (por pessoa, igualmente, personalizado), a contagem de pessoas e o valor de cada uma editável.</td><td>Passo 4</td></tr>
+  </table></div>
+  <h3 style="margin:44px 0 12px">Terceira rodada: menos telas, mais conversa</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Ajuste pedido</th><th>Como ficou</th></tr>
+    <tr><td>Várias telas poderiam estar no próprio chat da IA, só conectando dados, com a impressão de um assistente pessoal</td><td>O protótipo caiu para <b>duas telas</b>: a entrada (restaurantes ou QR) e a conversa. Recomendações, cardápio, confirmação, pedido enviado, conta ao vivo, divisão, pagamento e comprovante viraram <b>cartões dentro do chat</b>.</td></tr>
+    <tr><td>Dar a impressão de um assistente pessoal</td><td>O assistente entende pedidos em linguagem natural em qualquer etapa: "pedir mais", "chamar o garçom", "terminei, pode liberar a mesa". Atalhos aparecem como respostas rápidas, e uma barra mostra em que etapa da jornada você está.</td></tr>
+    <tr><td>Só conectar dados</td><td>O assistente usa o que já existe: gosto e histórico do cliente, saldo do VR, cardápio e comanda do PDV, e o status da cozinha. Não cria dados novos.</td></tr>
+  </table></div>
+  <h3 style="margin:44px 0 12px">Quarta rodada: pagamento invisível</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Ajuste pedido</th><th>Como ficou</th></tr>
+    <tr><td>Inverter a lógica do pagamento: pagar antes do pedido, para dar a impressão de que a pessoa quase nem pagou, usando o que o app já sabe</td><td>O pagamento acontece <b>ao confirmar o pedido</b>, com o meio que o app já conhece (VR e Pix, ou cartão salvo). Não existe "pedir a conta" nem "pagar" como etapas.</td></tr>
+    <tr><td>Depois de pagar, mostrar o que foi pago, com um botão para chamar o garçom se o pedido estiver errado</td><td>Cartão "Pago e enviado à cozinha", com itens, taxa, total e meio. Embaixo, <b>"Pedido errado? Chamar o garçom"</b>. O garçom vê o que foi pedido e pago.</td></tr>
+    <tr><td>Reduzir ao máximo a fricção do pagamento, como uma conversa com uma IA diária, "feliz"</td><td>O assistente fala como numa conversa ("Prontinho! Paguei R$ 54,34 com seu VR e Pix e já mandei para a cozinha"). Sem cobrança, sem maquininha.</td></tr>
+    <tr><td>O botão "de sempre" agiliza muito e torna o processo mais invisível</td><td>"O de sempre" fica no topo da conversa: <b>2 toques</b> (Pedir e Confirmar e pagar) para pedir e pagar.</td></tr>
+  </table></div>
+</div></section>
+
+<section id="mentores"><div class="wrap">
+  <div class="sec-head">
+    <h2>O que os mentores pediram para pensar melhor</h2>
+    <p>Quatro pontos, cada um com a pergunta como chegou e a nossa resposta. O protótipo e as seções abaixo mostram cada um na prática.</p>
+  </div>
+  <div class="mentors">
+    <article class="mentor"><span class="n">1</span>
+      <p class="ask2">Definir o público que vamos atacar, pensando no 80/20: a maioria, para validar a nossa ideia.</p>
+      <p class="ans"><b>Trabalhador com vale-refeição que almoça fora em dia útil.</b> São 22,1 milhões de pessoas no PAT, e quase todas as evidências de volume apontam para o almoço. O formato dominante é por quilo ou buffet, então o desenho tem duas variantes: <b>Mesa iFood</b> (com garçom) e <b>Comanda iFood</b> (sem fila no caixa).</p>
+      <a href="#publico">Ver o público e a evidência</a></article>
+    <article class="mentor"><span class="n">2</span>
+      <p class="ask2">Fricção da jornada completa (quantidade).</p>
+      <p class="ans">Hoje a jornada tem cerca de <b>4 esperas e 8 ações</b>. Com a Mesa iFood, <b>0 esperas</b> e cerca de <b>6 toques</b> na primeira vez, e <b>4 toques</b> com "o de sempre". A conta e o pagamento deixam de existir como etapas: o pagamento acontece ao confirmar o pedido.</p>
+      <a href="#jornada">Ver a contagem por momento</a></article>
+    <article class="mentor"><span class="n">3</span>
+      <p class="ask2">Como incluir inteligência artificial para ajudar na fricção e na acessibilidade da jornada (atendimento por voz, pensando como um Claude, um bot de IA que ajuda nos pedidos) ou como ajudar com os dados existentes para melhorar a experiência.</p>
+      <p class="ans"><b>Duas camadas.</b> Um assistente pessoal que concentra a jornada numa conversa: pergunta "o que você está a fim hoje?", responde por texto ou voz, monta o cardápio com alergia e saldo do VR, paga por você ao confirmar o pedido. E uma IA invisível sobre dados já consentidos: o de sempre, aviso de mesa liberando, resumo da mesa para o garçom.</p>
+      <a href="#ia">Ver a IA, e teste no passo 2</a></article>
+    <article class="mentor"><span class="n">4</span>
+      <p class="ask2">Como conectar outros PDVs do mercado que não são do iFood, ou caso a pessoa não tenha o iFood.</p>
+      <p class="ans"><b>Aberto por padrão, melhor com iFood.</b> Uma escada de integração (da conta avulsa ao TEF e à API) cobre qualquer PDV. E quem não tem o iFood paga por uma página web, sem login, com Pix, Apple Pay ou cartão. Use o botão <b>Sem iFood</b> no celular.</p>
+      <a href="#pdv">Ver a escada de integração</a></article>
+  </div>
+</div></section>
+
+<section id="publico" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Quem é a maioria? O público que valida a ideia</h2>
+    <p>Leitura do 80/20 aqui: em vez de procurar os melhores clientes, procuramos <b>onde está o maior volume</b>, para provar que a ideia serve para a maioria e não para um nicho.</p>
+  </div>
+
+  <h3 style="margin-bottom:12px">A escada de evidências, do maior para o menor recorte</h3>
+  <ol class="ladder">
+    <li><b>22,1 milhões de trabalhadores no PAT, em 327 mil empresas.</b><span>Têm vale-refeição ou alimentação, e 86% ganham até cinco salários mínimos.<span class="tag t-br">BR ✔</span></span></li>
+    <li><b>O vale pesa no almoço.</b><span>O VR responde por mais de 20% dos pagamentos no horário do almoço, e 60% dos trabalhadores só comem onde o benefício é aceito.<span class="tag t-br">BR ✔</span></span></li>
+    <li><b>O almoço de dia útil voltou para o salão.</b><span>61% dos consumidores almoçam no estabelecimento em dias úteis (2023), contra 50% em 2021 e 74% em 2019.<span class="tag t-br">BR ✔</span></span></li>
+    <li><b>Quase sempre os mesmos lugares.</b><span>49% dos usuários de VR concentram o benefício em apenas 3 restaurantes: é o "20%" que dá recorrência.<span class="tag t-br">BR ✔</span></span></li>
+  </ol>
+
+  <h3 style="margin:44px 0 6px">Onde esse trabalhador almoça</h3>
+  <p style="color:var(--ink2);margin-bottom:14px">Preferência no horário de almoço entre usuários de cartões Pluxee (2024). É preferência declarada, não volume financeiro.<span class="tag t-br">BR ✔</span></p>
+  <div class="hbar" role="img" aria-label="Por quilo 33%, buffet com preço fixo 33%, à la carte simples 19%, outros 15%">
+    <div class="r"><span>Restaurante por quilo</span><div class="track"><div class="fill" style="width:33%">33%</div></div></div>
+    <div class="r"><span>Buffet com preço fixo</span><div class="track"><div class="fill" style="width:33%">33%</div></div></div>
+    <div class="r"><span>À la carte simples</span><div class="track"><div class="fill red" style="width:19%">19%</div></div></div>
+    <div class="r"><span>Outros</span><div class="track"><div class="fill grey" style="width:15%">15%</div></div></div>
+  </div>
+
+  <div class="tablewrap" style="margin-top:26px"><table>
+    <tr><th>Segmento</th><th>Peso</th><th>Ticket médio (ABBT)</th><th>Onde está a fricção</th><th>Nossa resposta</th></tr>
+    <tr><td>Por quilo e buffet de preço fixo</td><td>66% da preferência</td><td>R$ 47,87 (autosserviço)</td><td>Fila no caixa e comanda de papel; quase não há garçom</td><td>Variante <b>Comanda iFood</b></td></tr>
+    <tr><td>Prato feito, comercial e executivo</td><td>Não medido separadamente nesta pesquisa</td><td>R$ 37,44 a R$ 55,63</td><td>Esperar a conta e a maquininha</td><td><b>Mesa iFood</b></td></tr>
+    <tr><td>À la carte</td><td>19%</td><td>R$ 96,44</td><td>Divisão da conta e espera longa</td><td><b>Mesa iFood</b>, ticket alto</td></tr>
+    <tr><td>Bares, jantar e fim de semana</td><td>Sem dado nesta pesquisa</td><td>Não medido</td><td>Comanda aberta por horas, calote</td><td>Fora do foco agora</td></tr>
+  </table></div>
+
+  <div class="verdict">
+    <h3>Decisão: o público é o almoço do trabalhador com VR, e a ideia tem duas variantes</h3>
+    <p><b>A correção que fizemos:</b> antes sugerimos começar pelo executivo à la carte. Ele é o melhor encaixe para o desenho com garçom, mas <b>não é a maioria</b>. A maioria almoça em por quilo ou buffet, onde o problema é a fila do caixa. Por isso a ideia passa a cobrir os dois formatos.</p>
+    <div class="pills"><span>Público: trabalhador com VR, almoço de dia útil</span><span>Formato 1 (maioria): por quilo e buffet</span><span>Formato 2 (melhor encaixe): salão com garçom</span></div>
+  </div>
+
+  <h3 style="margin:44px 0 6px">Variante da maioria: Comanda iFood, sem fila no caixa <span class="tag t-es">Hipótese</span></h3>
+  <p style="color:var(--ink2)">No por quilo, o cartão ou papel de comanda é o que causa a fila. A identidade iFood substitui essa comanda.</p>
+  <ol class="flow">
+    <li><b>QR na entrada</b>Escaneia o QR e o app abre no restaurante. Nenhuma comanda de papel.</li>
+    <li><b>Balança</b>Ao pesar, o prato é lançado na conta do cliente e aparece no app.</li>
+    <li><b>Come</b>Bebida e sobremesa também entram na conta, sem passar no caixa.</li>
+    <li><b>Sai</b>Paga o prato no ato, pelo celular, com o meio que o app já conhece, e sai. O caixa só atende quem não usa o app.</li>
+  </ol>
+
+  <h3 style="margin:44px 0 12px">Como validar hoje, em 15 minutos, com colegas</h3>
+  <div class="cols3">
+    <div><h3>5 perguntas</h3><p>Você almoça fora em dia útil? Em que tipo de restaurante? Paga com VR, Pix ou cartão? Quanto espera até sair? Já deixou de ir por causa da fila?</p></div>
+    <div><h3>Quantos ouvir</h3><p>De 10 a 15 pessoas, incluindo quem usa e quem não usa o iFood. Anote o formato de restaurante de cada resposta.</p></div>
+    <div><h3>Como saber que deu certo</h3><p>Se a maioria almoça fora com VR e cita fila ou espera como problema, o público está validado. Mostre a contagem no pitch.</p></div>
+  </div>
+  <p style="margin-top:20px;color:var(--ink2)">Limite: preferência não é volume financeiro. Para provar o 80/20 de verdade, o próximo passo é cruzar com dados de transação do salão, que o iFood tem e que não podemos usar no hackathon.</p>
+</div></section>
+
+<section id="jornada"><div class="wrap">
+  <div class="sec-head">
+    <h2>Fricção da jornada: a conta e o pagamento deixam de existir</h2>
+    <p>Esperas pesam mais que ações, então contamos as duas coisas separadamente. Dos seis momentos do desafio, dois se dissolvem: pagar vira parte de pedir. É uma contagem de desenho, a ser confirmada com medição no piloto.<span class="tag t-es">Estimativa</span></p>
+  </div>
+  <div class="tablewrap"><table>
+    <tr><th>Momento do desafio</th><th>Hoje</th><th>Mesa iFood</th><th>Onde entra a IA</th></tr>
+    <tr><td>1. Chegar e sentar</td><td>1 espera: mesa e cardápio. Escolha do restaurante por outro app ou indicação</td><td>2 toques: abrir o restaurante (no app ou pelo QR) e "Estou na mesa". Se não há mesa, fila virtual opcional</td><td>Leque de restaurantes por gosto e região, com estimativa de espera<span class="ai-tag">IA</span></td></tr>
+    <tr><td>2. Pedir</td><td>1 espera pelo garçom e 3 ações: ler, chamar, ditar</td><td>4 toques na 1ª vez (responder, adicionar, revisar, confirmar) e <b>2 com "o de sempre"</b>. Sem espera</td><td>Pergunta guia, filtros de alergia e saldo, "o de sempre"<span class="ai-tag">IA</span></td></tr>
+    <tr><td>5. Pagar (acontece aqui, no pedido)</td><td>1 espera pela maquininha e 2 ações: aproximar e digitar a senha</td><td><b>0 toques a mais</b>: ao confirmar, o assistente paga com o meio do app. Aparece "Pago" e o que foi pago</td><td>Escolhe o meio (VR e Pix, ou cartão salvo)<span class="ai-tag">IA</span></td></tr>
+    <tr><td>3. Consumir</td><td>Sem visibilidade do que foi pedido e pago</td><td>O garçom só leva a comida. Se algo vier errado, 1 toque em "Pedido errado"</td><td>Ao ser chamado, o garçom já vê o que foi pedido e pago<span class="ai-tag">IA</span></td></tr>
+    <tr><td>4. Pedir a conta</td><td>1 espera e 2 ações: acenar e conferir</td><td><b>Não existe</b>: já está tudo pago</td><td>Se perguntarem pela conta, responde que não precisa<span class="ai-tag">IA</span></td></tr>
+    <tr><td>6. Sair</td><td>Comprovante pedido e sem fidelidade</td><td>0 a 1 toque ("Já terminei"). Nota, benefício e mesa liberada automáticos</td><td>Avisa o garçom que a mesa liberou<span class="ai-tag">IA</span></td></tr>
+    <tr><td><b>Total</b></td><td style="color:var(--red-d);font-weight:700">≈ 4 esperas e ≈ 8 ações</td><td style="color:var(--ok);font-weight:700">0 esperas, ≈ 6 toques na 1ª vez e ≈ 4 com "o de sempre"</td><td></td></tr>
+  </table></div>
+  <p style="margin-top:18px;color:var(--ink2)">Agora os toques também caem. Com o pagamento antes do pedido, saem as etapas "pedir a conta" e "pagar", e os <b>4 esperas desaparecem</b>. Para o recorrente são 4 toques: abrir pelo QR, "Estou na mesa", "O de sempre" e "Confirmar e pagar". O protótipo mostra quatro momentos: Chegar e sentar, Pedir e pagar, Consumir e Sair.</p>
+  <p style="margin-top:12px;color:var(--ink2)">Lá fora, serviços como Wagamama e Sunday divulgam 12 e 15 minutos poupados por mesa. São números das próprias empresas, então servem como ordem de grandeza.<span class="tag t-ex">Exterior</span> O piloto deve medir o tempo brasileiro, que não tem número publicado.</p>
+</div></section>
+
+<section id="reserva" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Horário cheio: reserva e mesa compartilhada</h2>
+    <p>Pergunta do time: várias pessoas podem reservar a mesma mesa, ou só entrar e sentar, e como saber que as 3 pessoas estão juntas, sem aumentar a fricção? Nossa resposta: <b>não descobrimos quem está junto</b>. Provamos que a pessoa está na mesa e atribuímos quem pediu o quê.</p>
+  </div>
+  <div class="layers">
+    <div class="layer"><b>1. Mesa</b><span>O objeto físico, com o QR ou NFC. Escanear é a prova de que a pessoa está lá.</span></div>
+    <div class="layer"><b>2. Sessão da mesa</b><span>Uma visita. Abre quando a primeira pessoa escaneia e fecha quando todos terminam. Cada pessoa paga o que pede.</span></div>
+    <div class="layer"><b>3. Pessoa</b><span>Cada uma com a sua conta iFood (ou página web) e a sua própria comanda dentro da sessão.</span></div>
+  </div>
+  <div class="tablewrap"><table>
+    <tr><th>Situação</th><th>O que o sistema faz</th><th>Toque extra</th></tr>
+    <tr><td>3 colegas chegam sem reserva e 1 escaneia primeiro</td><td>Abre a sessão. Os outros escaneiam o mesmo QR e veem "Entrar na mesa de Ana?".</td><td>1 toque, só para quem entra depois</td></tr>
+    <tr><td>Reserva para 3, feita por 1 pessoa</td><td>A reserva é do <b>grupo</b>. O link vai por WhatsApp e quem abre entra direto.</td><td>0</td></tr>
+    <tr><td>2 pessoas reservam separado e estão juntas</td><td>A reserva vale por horário e capacidade, não por mesa. Ao sentar, aparece "Entrar na mesa?" e uma das reservas é liberada.</td><td>1 toque</td></tr>
+    <tr><td>Duas pessoas "reservam a mesma mesa"</td><td>Não existe conflito: a <b>mesa física só é atribuída quando alguém escaneia</b>.</td><td>0</td></tr>
+    <tr><td>Alguém sai antes</td><td>Já pagou o que pediu e sai quando quiser. A sessão continua para os outros.</td><td>0</td></tr>
+    <tr><td>Chega alguém depois</td><td>Entra com o mesmo "Entrar na mesa?" e não paga o que veio antes.</td><td>1 toque</td></tr>
+    <tr><td>Estranho no mesmo QR (mesa comunitária ou QR fotografado)</td><td>Só paga o que ele mesmo pediu. Qualquer membro pode tocar em "não conheço", e o garçom vê se há mais celulares do que lugares.</td><td>0</td></tr>
+  </table></div>
+
+  <h3 style="margin:44px 0 12px">Horário cheio: fila virtual, não reserva obrigatória</h3>
+  <div class="cols3">
+    <div><h3>Walk-in é o padrão</h3><p>No almoço de trabalho, a maioria chega e senta. Por isso a reserva é opcional, e o caminho padrão (chegar, sentar, escanear) não muda.</p></div>
+    <div><h3>Fila virtual opcional</h3><p>No leque de restaurantes: "Mesa para 3 em cerca de 8 min". Sem depósito, a mesa fica guardada por 10 minutos e depois é liberada sozinha. A Coreia já usa listas de espera virtuais, como Tabling e CatchTable.<span class="tag t-ex">Exterior</span></p></div>
+    <div><h3>Check-in é o próprio QR</h3><p>Quem estava na fila confirma presença escaneando o QR da mesa, o mesmo toque do passo 1. A fila não acrescenta nenhuma etapa na mesa.</p></div>
+  </div>
+
+  <h3 style="margin:44px 0 12px">Por que não aumenta a fricção</h3>
+  <ul class="checks">
+    <li>Quem abre a mesa não faz nada a mais, e os outros fazem 1 toque só quando já há uma sessão aberta.</li>
+    <li>Cada pessoa paga o que pede, então não existe divisão de conta. "Estar junto" só importa se alguém quiser fazer a boa e pagar o pedido de outra pessoa (fase 2).</li>
+    <li>Cada item pertence a quem pediu, então uma pessoa errada na mesa não gera cobrança indevida para os outros.</li>
+    <li>A IA ajuda sem pedir nada: "Caio pediu R$ 63,50. Quer fazer a boa e pagar?" (fase 2).</li>
+  </ul>
+
+  <h3 style="margin:44px 0 12px">Evolução por fases</h3>
+  <div class="cols3">
+    <div><h3>MVP do hackathon</h3><p>Sessão por QR, comanda por pessoa e "Entrar na mesa". Sem reserva.</p></div>
+    <div><h3>Fase 2</h3><p>Convite por link (WhatsApp), fila virtual e alertas ao garçom quando há mais celulares do que lugares.</p></div>
+    <div><h3>Fase 3</h3><p>Reserva para grupos grandes, QR dinâmico com checagem de localização aproximada, e regras para mesas comunitárias.</p></div>
+  </div>
+  <p style="margin-top:20px;color:var(--ink2)">Limites: essa lógica é uma proposta nossa, apoiada em casos de fora, e não foi validada com restaurantes nem com a Saipos. Um QR estático pode ser fotografado e escaneado de longe, e as mitigações (QR dinâmico, localização, contagem de lugares) não foram testadas.<span class="tag t-es">Hipótese</span></p>
+</div></section>
+
+<section id="ia"><div class="wrap">
+  <div class="sec-head">
+    <h2>Duas camadas de IA, para reduzir fricção e abrir acesso</h2>
+    <p>A IA entra onde a pessoa mais trava: decidir o que pedir, entender o cardápio e pagar sem perceber. Ela não substitui o garçom, ela tira o trabalho repetitivo dele.</p>
+  </div>
+  <div class="two">
+    <div>
+      <h3 style="margin-bottom:10px">Camada visível: assistente com pergunta guia <span class="ai-tag">IA</span></h3>
+      <ul class="checks">
+        <li><b>Uma conversa só:</b> pedir e pagar acontecem no chat, como cartões, sem trocar de tela. O tom é o de uma conversa do dia a dia, e o pagamento vira um "Prontinho!".</li>
+        <li><b>Pergunta norteadora:</b> "O que você está a fim hoje?". A resposta pode ser escrita ou falada, e o assistente monta o cardápio a partir dela.</li>
+        <li><b>Filtros que importam:</b> alergia (por exemplo, sem camarão), vegetariano e o saldo do VR do dia.</li>
+        <li><b>O de sempre, no topo:</b> repete o pedido habitual e já o paga com o meio de sempre. Dois toques, e é o que mais deixa o processo invisível.</li>
+        <li><b>Pagar sem perceber:</b> escolhe o meio (VR e Pix, ou cartão salvo) a partir do que o app já sabe, e só mostra o que foi pago.</li>
+        <li><b>Acessibilidade:</b> voz para quem não consegue digitar, e tradução de pratos para turistas.</li>
+        <li><b>Segurança sem garçom:</b> o cliente confirma o resumo antes de pagar. A alergia vai destacada para a cozinha, e o botão "Pedido errado" chama o garçom.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Camada invisível: IA sobre dados existentes <span class="ai-tag">IA</span></h3>
+      <ul class="checks">
+        <li><b>Leque de restaurantes:</b> sugere onde ir por gosto, região e saldo, na abertura do app.</li>
+        <li><b>Resumo da mesa para o garçom:</b> quando ele é chamado, vê o que aconteceu, sem perguntar.</li>
+        <li><b>Mesa liberando:</b> prevê quando a mesa sai. O Sushiro, no Japão, <span class="tag t-ex" style="margin:0">Exterior</span> prevê a demanda dos próximos 15 minutos.</li>
+        <li><b>Para o restaurante:</b> horários de pico, pratos mais pedidos, mesas com mais espera.</li>
+        <li><b>Regra:</b> só dados com consentimento (LGPD), e o cliente pode desligar.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="verdict" style="background:#2f2170">
+    <h3>Por que voz no celular, e por que o cliente confirma</h3>
+    <p>Voz em drive-thru teve resultado misto: a McDonald's encerrou o teste com a IBM em 2024, e a IA acertou 83% dos pedidos contra 87% dos humanos, com cerca de 21% precisando de ajuda. O ruído e várias vozes juntas são o problema. Na mesa, a voz fica no <b>microfone do próprio celular</b>. Sem o garçom no meio, o ponto de segurança passa a ser o <b>resumo que o cliente confirma antes de pagar</b>, com a alergia em destaque e o botão "Pedido errado" depois. O ganho de venda de cerca de 6% com upsell vem de um fornecedor, e entra só como hipótese.<span class="tag t-ex" style="color:#fff">Exterior</span></p>
+  </div>
+</div></section>
+
+<section id="garcom"><div class="wrap two">
+  <div>
+    <h2>O garçom leva a comida e atende quem chama</h2>
+    <p class="lead" style="margin-bottom:22px">O pedido já chega pago e vai direto à cozinha, então o garçom deixa de anotar, de confirmar e de cobrar. O app dele é uma extensão do App do Garçom da Saipos e mostra o que importa.</p>
+    <ul class="checks">
+      <li><b>Prato pronto:</b> recebe só o aviso "levar à Mesa 12". O pedido já chega pago.</li>
+      <li><b>Quando é chamado:</b> abre o resumo da mesa e já sabe o que foi pedido, o que foi pago, se há alergia, quanto tempo passou e em que etapa a mesa está.</li>
+      <li><b>"Pedido errado":</b> se o cliente tocar nesse botão, o garçom é chamado já sabendo o que foi pedido e pago, e acerta na hora.</li>
+      <li><b>Pagamento no final (opção):</b> se o cliente prefere dinheiro ou maquininha, recebe "Mesa 12 vai pagar com maquininha" e leva a Maquinona.</li>
+      <li><b>Gorjeta:</b> a taxa de serviço fica registrada, o que facilita o rateio da Lei 13.419/2017.</li>
+    </ul>
+    <p style="margin-top:18px;color:var(--ink2)">Teste: no celular ao lado, peça "o de sempre", toque em "Pedido errado" e veja o aviso aqui. Depois teste "Prefiro pagar no final" e "Pagar com o garçom".</p>
+  </div>
+  <div class="panel" aria-live="polite">
+    <header><span>App do Garçom · extensão Saipos</span><span>Almoço</span></header>
+    <div class="alert calm" id="gnote"></div>
+    <div class="mesa"><div><b>Mesa 10</b><small>Pagou há 2 min</small></div><span class="pill ok">Livre para limpar</span></div>
+    <div class="mesa"><div><b>Mesa 11</b><small>Em consumo</small></div><span class="pill go">Conta aberta</span></div>
+    <div class="mesa me" id="gm12"></div>
+    <div class="mesa"><div><b>Mesa 14</b><small>Sem check-in</small></div><span class="pill">Maquinona</span></div>
+    <div class="tl"><h4>Resumo da Mesa 12</h4><ol id="gtl"></ol></div>
+    <div class="ailine" id="gai"></div>
+  </div>
+</div></section>
+
+<section id="pdv" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Funcionar em qualquer PDV, e para quem não tem iFood</h2>
+    <p>O mercado de sistemas para restaurante é fragmentado: o líder Colibri tem cerca de 7% do volume transacionado, e o resto está com a Linx e regionais. Integrar um por um não escala.<span class="tag t-br">BR ✔</span></p>
+  </div>
+  <h3 style="margin-bottom:12px">Escada de integração: do mais simples ao mais profundo</h3>
+  <div class="tablewrap"><table>
+    <tr><th>Degrau</th><th>Como funciona</th><th>Serve para</th><th>Limite</th></tr>
+    <tr><td>1. Conta avulsa</td><td>O pedido pago pelo app chega ao restaurante como pedido externo (impressora de cozinha ou painel web) e entra no PDV como venda já paga. O aviso ao garçom chega por painel web ou notificação.</td><td>Qualquer PDV, hoje</td><td>Conciliação manual</td></tr>
+    <tr><td>2. TEF</td><td>É a porta de pagamento padrão dos PDVs brasileiros. Há PDVs que já fazem Pix por aproximação pelo TEF da Fiserv (SiTEF).</td><td>PDVs que usam TEF</td><td>Depende de acordo com o provedor de TEF</td></tr>
+    <tr><td>3. API direta</td><td>A comanda, a cozinha e o pagamento se conversam sem intermediário. O pedido do cliente entra direto na cozinha.</td><td>Parceiros iFood: Saipos, Maquinona, Consumer</td><td>Esforço de engenharia por parceiro</td></tr>
+  </table></div>
+  <p style="margin-top:18px;color:var(--ink2)">O <b>Pix é o trilho universal</b>. Um cuidado: até junho de 2026 o Pix por aproximação funcionava só em Android, e o teto de R$ 500 caiu em 1º/10/2026. Confirme o estado do iPhone antes de citar no pitch.<span class="tag t-br">BR ✔</span></p>
+
+  <h3 style="margin:44px 0 12px">Quem não tem o iFood: "Sem iFood" no celular</h3>
+  <div class="cols3">
+    <div><h3>Sem app e sem cadastro</h3><p>O QR abre uma página web. O cliente responde à pergunta, pede e paga sem login, como fazem os serviços de QR de fora.</p></div>
+    <div><h3>Paga como preferir</h3><p>Pix, Apple Pay, Google Pay ou cartão, e também dinheiro ou maquininha com aviso ao garçom. O que exige conta (VR, cashback, "o de sempre") aparece como convite, não como barreira.</p></div>
+    <div><h3>A mesa vira aquisição</h3><p>Depois de pagar, "crie sua conta iFood e ganhe cupom". O benefício continua sendo o motivo para ter o iFood.</p></div>
+  </div>
+  <p style="margin-top:18px"><b>Teste agora:</b> role até o celular no topo e toque em <b>Sem iFood</b>.</p>
+</div></section>
+
+<section id="pagamento"><div class="wrap">
+  <div class="sec-head">
+    <h2>Pagamento invisível: paga ao confirmar o pedido</h2>
+    <p>A lógica foi invertida: em vez de pagar no fim, o assistente paga na hora de confirmar o pedido, com o que o app já sabe. O cliente vê "Pago" e o que foi pago, e quase não percebe o pagamento.</p>
+  </div>
+  <div class="tablewrap"><table>
+    <tr><th>Caminho</th><th>Como funciona</th><th>Fricção</th><th>Ponto de atenção</th></tr>
+    <tr><td>Automático (padrão)</td><td>Ao confirmar, o assistente paga com o meio do app: VR (saldo iFood Benefícios) e Pix, ou o cartão salvo. Depois mostra "Pago e enviado à cozinha".</td><td>0 toques além de confirmar</td><td>O VR só paga refeição pronta. Se for recusado, o assistente oferece outro meio antes de ir à cozinha.</td></tr>
+    <tr><td>Mudar o meio</td><td>"Mudar" no cartão de confirmação: Pix, cartão salvo ou Apple Pay.</td><td>1 toque</td><td>Sem conta iFood: página web, sem VR.</td></tr>
+    <tr><td>Pagar no final</td><td>"Prefiro pagar no final (dinheiro ou maquininha)": o pedido vai à cozinha e o garçom é avisado quando a pessoa quiser pagar.</td><td>Volta ao fluxo de hoje</td><td>A mesa só libera quando o garçom confirma o recebimento.</td></tr>
+  </table></div>
+  <h3 style="margin:44px 0 12px">O que muda com o pagamento antes do pedido</h3>
+  <ul class="checks">
+    <li><b>Acaba o risco de sair sem pagar.</b> Quem pagou antes não deixa conta, e o restaurante recebe antes de entregar.</li>
+    <li><b>Acaba pedir a conta e esperar a maquininha.</b> O garçom deixa de cobrar e só leva a comida.</li>
+    <li><b>Cada pessoa paga o que pede.</b> Com isso, não existe divisão de conta. "Fazer a boa" (pagar o pedido de outra pessoa) fica como fase 2: "Caio pediu R$ 63,50. Quer pagar?".</li>
+    <li><b>Confiança depois de pagar:</b> o cartão mostra itens, taxa, total e meio de pagamento. Se algo estiver errado, "Pedido errado? Chamar o garçom".</li>
+  </ul>
+  <p style="margin-top:20px;color:var(--ink2)">Taxa de serviço: a sugestão de 10% aparece no cartão de confirmação, e logo abaixo há o link "Não quero pagar a taxa". Ele abre um popup curto e neutro, que explica para que a taxa serve, com "Manter" e "Tirar" de <b>mesmo destaque</b>. O Procon considera abusivo incluir os 10% sem permitir a recusa, então o texto do popup deve passar pelo jurídico.<span class="tag t-br">BR ✔</span></p>
+  <p style="margin-top:12px;color:var(--ink2)">Limite: pagar antes depende de o cliente confiar em pagar antes de comer, de uma janela curta para editar ou cancelar com estorno (proposta a validar) e do jurídico e do PAT para o uso do saldo do VR. Uma garantia antecipada para quem prefere pagar no final fica como opção, não como padrão.<span class="tag t-es">Hipótese</span></p>
+</div></section>
+
+<section id="custos" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Custo perto de zero para o restaurante</h2>
+    <p>65% dos restaurantes são MEI e só 42% operaram com lucro em julho/2026. Cada real de taxa pesa, então o hardware novo é só uma placa de QR.<span class="tag t-br">BR ✔</span></p>
+  </div>
+  <div class="two">
+    <div class="tablewrap"><table>
+      <tr><th>Quem</th><th>Item</th><th>Valor</th></tr>
+      <tr><td>Restaurante</td><td>Placa QR/NFC por mesa</td><td>R$ 1–2 a R$ 17,90</td></tr>
+      <tr><td>Restaurante</td><td>Comanda/PDV (se ainda não tem)</td><td>R$ 60–300 por mês</td></tr>
+      <tr><td>Restaurante</td><td>Taxas</td><td>Pix 0–0,49%, débito 1,4–2%, crédito 3,2–4,9%, VR até 3,6%</td></tr>
+      <tr><td>Restaurante</td><td>Treino do garçom</td><td>30 min e microvídeos no app</td></tr>
+      <tr><td>iFood</td><td>Desenvolvimento até o piloto</td><td>R$ 0,6–1,7 mi<span class="tag t-es">Estimativa</span></td></tr>
+      <tr><td>iFood</td><td>Assistente de IA (voz e texto)</td><td>A cotar por uso<span class="tag t-es">Estimativa</span></td></tr>
+      <tr><td>Hackathon</td><td>MVP</td><td>R$ 0–100 (placas de QR)</td></tr>
+    </table></div>
+    <div class="calc">
+      <h3 style="margin-bottom:6px">Exemplo ilustrativo</h3>
+      <p style="font-size:.9rem;color:var(--ink2);margin-bottom:12px">Executivo com 20 mesas, ticket de R$ 56, 2 giros por dia, 22 dias úteis.<span class="tag t-es">Estimativa</span></p>
+      <div class="r"><span>Faturamento mensal</span><span>R$ 148 mil</span></div>
+      <div class="r"><span>+5% de refeições no pico</span><span>+R$ 7,4 mil</span></div>
+      <div class="r"><span>10 p.p. do crédito para Pix</span><span>+R$ 520</span></div>
+      <div class="r"><span>Uma contratação evitada</span><span>+R$ 3–4 mil</span></div>
+      <div class="r"><span>Placas (uma vez)</span><span>−R$ 360</span></div>
+      <div class="r t"><span>Retorno</span><span>favorável se houver fila</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="riscos"><div class="wrap">
+  <div class="sec-head">
+    <h2>Riscos e como a gente trata cada um</h2>
+    <p>Sem garçom confirmando o pedido, o risco da IA errar fica por conta do cliente e da cozinha. Com o pagamento antes do pedido, o risco de sair sem pagar deixa de existir, e o novo risco é pagar e o pedido vir errado.</p>
+  </div>
+  <div class="tablewrap"><table>
+    <tr><th>Risco</th><th>Gravidade</th><th>Mitigação</th></tr>
+    <tr><td>IA errar o pedido ou a alergia</td><td><span class="sev alta">Alta</span></td><td>Resumo que o cliente confirma antes de pagar, alergia em destaque na comanda da cozinha, e o botão "Pedido errado" depois de pago, que chama o garçom.</td></tr>
+    <tr><td>Estranho entra na mesa (QR fotografado ou mesa comunitária)</td><td><span class="sev media">Média</span></td><td>Cada pessoa paga só o que pediu, qualquer membro pode remover quem não conhece, e o garçom vê se há mais celulares do que lugares.</td></tr>
+    <tr><td>Pagar antes e o pedido vir errado</td><td><span class="sev alta">Alta</span></td><td>Cartão com o que foi pago, botão "Pedido errado" e garçom que acerta na hora. Ajuste ou estorno pelo garçom (proposta a validar).</td></tr>
+    <tr><td>Pagamento recusado ao confirmar</td><td><span class="sev media">Média</span></td><td>O pedido só vai à cozinha depois do pagamento. O assistente avisa e oferece outro meio (Pix, cartão).</td></tr>
+    <tr><td>Cliente muda de ideia depois de pagar</td><td><span class="sev media">Média</span></td><td>Janela curta para editar ou cancelar com estorno (proposta a validar).</td></tr>
+    <tr><td>Taxa de serviço (CDC)</td><td><span class="sev alta">Alta</span></td><td>10% como sugestão em reais, botão 0% de mesmo destaque, validação jurídica antes de pré-marcar.</td></tr>
+    <tr><td>Restaurante sem margem</td><td><span class="sev alta">Alta</span></td><td>Recurso incluso no plano do PDV parceiro, com ROI mostrado em taxa e giro.</td></tr>
+    <tr><td>Pedido sem confirmação humana na cozinha</td><td><span class="sev media">Média</span></td><td>Pedidos com valor alto ou itens fora do padrão podem pedir uma checagem do garçom (regra opcional).</td></tr>
+    <tr><td>VR: álcool e disputa do decreto</td><td><span class="sev media">Média</span></td><td>Divisão por item e por meio; operar dentro do teto de 3,6%; acompanhar as ações das operadoras.</td></tr>
+    <tr><td>LGPD e dados da IA</td><td><span class="sev media">Média</span></td><td>Consentimento granular, dado mínimo para o restaurante, e o cliente pode desligar o histórico.</td></tr>
+    <tr><td>Resistência do garçom e do cliente</td><td><span class="sev media">Média</span></td><td>O garçom ganha o resumo da mesa e deixa de anotar. Tudo é opcional, com o caminho antigo mantido.</td></tr>
+  </table></div>
+</div></section>
+
+<section id="piloto" style="background:#fff"><div class="wrap">
+  <div class="sec-head">
+    <h2>Piloto e métricas</h2>
+    <p>Comece pelo salão com garçom, que é o melhor encaixe, e prove a variante da maioria (por quilo) na sequência. Clientes de PDVs parceiros, em uma região de escritórios.</p>
+  </div>
+  <div class="metrics">
+    <div class="metric"><b>30%</b><span>das mesas abertas pelo app no 1º mês</span></div>
+    <div class="metric"><b>0 esperas</b><span>na jornada, medidas no piloto</span></div>
+    <div class="metric"><b>100%</b><span>dos pedidos pelo app pagos antes de ir à cozinha</span></div>
+    <div class="metric"><b>&lt; 2%</b><span>dos pedidos sinalizados como "errado" pelo cliente</span></div>
+    <div class="metric"><b>&gt; 50%</b><span>dos pedidos recorrentes feitos por "o de sempre", em 2 toques</span></div>
+    <div class="metric"><b>≥ atual</b><span>gorjeta média, mais recompra salão → delivery em 30 dias</span></div>
+  </div>
+  <p style="margin-top:22px;color:var(--ink2)">Metas são estimativas. Não há medição brasileira publicada do tempo de fechar a conta, então medir a linha de base antes do piloto faz parte do plano.</p>
+</div></section>
+
+<section class="dark" id="pitch"><div class="wrap">
+  <h2 style="max-width:20ch;margin-bottom:30px">O pitch em 30 segundos</h2>
+  <p class="pitch">"22 milhões de brasileiros almoçam com vale-refeição, e quase todos perdem tempo esperando garçom, conta e maquininha. Na Mesa iFood você abre o app, que já sugere restaurantes pelo seu gosto, ou escaneia o QR da mesa. Um assistente pergunta o que você está a fim, ou você diz 'o de sempre'. Você confirma, e ele paga com o VR e o Pix que já estão no seu app. O pedido vai direto à cozinha. Quase não dá para perceber que você pagou: não existe conta, não existe maquininha. O garçom só leva a comida, e se algo vier errado, um toque chama ele. Funciona em qualquer PDV, com ou sem conta iFood."</p>
+  <div class="qa">
+    <div><b>Qual é o público?</b>Trabalhador com VR no almoço de dia útil, a maioria do salão no almoço.</div>
+    <div><b>E o calote?</b>Não existe: o pagamento acontece antes do pedido ir à cozinha.</div>
+    <div><b>E se o pedido vier errado?</b>O cartão mostra o que foi pago e o botão "Pedido errado" chama o garçom, que já sabe tudo.</div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <p><span class="tag t-br" style="margin-left:0">BR ✔</span> dado verificado de fonte brasileira. <span class="tag t-ex">Exterior</span> dado de outro país, em geral divulgado pela própria empresa. <span class="tag t-es">Estimativa</span> cálculo ou hipótese nossa, a validar.</p>
+  <p>Fontes: Abrasel (mix de pagamento, contratação), Pluxee e ABBT (preferência de almoço, preço por tipo de refeição, uso do VR), Mosaiclab/Crest (almoço em dia útil), Agência Brasil (PAT, 22,1 milhões de trabalhadores), Startups.com.br (mercado de PDVs, Colibri), Restaurant Dive e Loman (testes de IA em drive-thru), Fiserv/CPlug (Pix por aproximação no TEF), Banco Central e imprensa (Pix por aproximação), site da Saipos (App do Garçom), comunicados de Sunday, Toast, Wagamama e iFood.</p>
+  <p>Limites: preferência declarada não é volume financeiro. Ganhos de tempo, gorjeta e ticket vêm de empresas de outros países. Faltam dados verificados sobre tempo médio de fechamento de conta no Brasil. Os números da jornada ("4 esperas e 8 ações" hoje, "0 esperas e 6 toques" com a Mesa iFood) são contagem de desenho, a medir no piloto. A "extensão da Saipos" para o garçom e a lógica de pagar antes do pedido são propostas do time, ainda não validadas com a Saipos, com o jurídico nem com o PAT. Hackathon Meteoro · Squad 4 · Payments Core.</p>
+</div></footer>
+
+<script>
+(function(){
+  var BRL=function(v){return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})};
+  var fmt=function(v){return v.toFixed(2).replace('.',',')};
+  var MENU=[
+    {id:'strogonofe',n:'Strogonofe de frango',v:36.90,d:'Prato do dia',shrimp:false,veg:false,kind:'prato'},
+    {id:'omelete',n:'Omelete de legumes',v:34.00,d:'Vegetariana',shrimp:false,veg:true,kind:'prato'},
+    {id:'frango',n:'Executivo de frango',v:39.90,d:'Grelhado, arroz e feijão',shrimp:false,veg:false,kind:'prato'},
+    {id:'file',n:'Executivo de filé',v:54.00,d:'Filé, arroz e batata',shrimp:false,veg:false,kind:'prato'},
+    {id:'salmao',n:'Salmão grelhado',v:62.00,d:'Com legumes',shrimp:false,veg:false,kind:'prato'},
+    {id:'risoto',n:'Risoto de camarão',v:58.00,d:'Contém camarão',shrimp:true,veg:false,kind:'prato'},
+    {id:'suco',n:'Suco de laranja',v:9.50,d:'Bebida',shrimp:false,veg:true,kind:'bebida'}
+  ];
+  var RECS=[['strogonofe','Prato do dia'],['omelete','Para você, pelo seu gosto']];
+  var byId=function(id){return MENU.filter(function(m){return m.id===id})[0]};
+  var VR=38;
+  var S;
+  function fresh(mode){S={mode:mode||'ifood',entry:'app',inChat:false,seated:false,stage:'order',joined:false,view:null,queue:false,invited:false,pay:mode==='web'?'pix':'saldo',payOpen:false,payLater:false,tipOn:true,modal:null,msgs:[],listening:false,thinking:false,menu:null,cart:[],rounds:[],receipts:[],paidSum:0,allergy:false,called:false,wrong:false,paid:false,rating:0,timer:null,stick:false}}
+  fresh();
+  var $=function(id){return document.getElementById(id)};
+  var screen=$('screen'), stepper=$('stepper');
+  var names=['Chegar e sentar','Pedir e pagar','Consumir','Sair'];
+  var isWeb=function(){return S.mode==='web'};
+  var flat=function(){return S.rounds.reduce(function(a,r){return a.concat(r)},[])};
+  var sumIds=function(ids){return ids.reduce(function(a,id){return a+byId(id).v},0)};
+  var tipPct=function(){return S.tipOn?10:0};
+  var cartBase=function(){return sumIds(S.cart)};
+  var cartTip=function(){return cartBase()*tipPct()/100};
+  var cartTotal=function(){return cartBase()+cartTip()};
+  var stepIdx=function(){if(!S.inChat||!S.seated) return 0; return {order:1,eating:2,done:3}[S.stage]};
+  var payName={saldo:'seu VR e Pix',pix:'Pix',cartao:'cartão ••4417',apple:'Apple Pay',dinheiro:'dinheiro',maq:'maquininha'};
+  var payShort={saldo:'VR e Pix',pix:'Pix',cartao:'cartão ••4417',apple:'Apple Pay',dinheiro:'dinheiro',maq:'maquininha'};
+  var nameList=function(ids){return ids.map(function(id){return byId(id).n}).join(' e ')};
+  var payLine=function(total){
+    if(S.pay==='saldo'&&!isWeb()){var vr=Math.min(VR,total); return 'VR (R$ '+fmt(vr)+') e Pix (R$ '+fmt(total-vr)+')'}
+    return payName[S.pay]===undefined?'':payShort[S.pay]+' (R$ '+fmt(total)+')';
+  };
+
+  function push(m){S.msgs.push(m);S.stick=true}
+  function ai(t){push({k:'ai',t:t})}
+  function user(t){push({k:'u',t:t})}
+  function card(c,extra){var m={k:'card',c:c,locked:false};for(var k in (extra||{}))m[k]=extra[k];push(m)}
+  function removeCards(kinds){S.msgs=S.msgs.filter(function(m){return !(m.k==='card'&&kinds.indexOf(m.c)>-1)})}
+  function lockCards(kinds){S.msgs.forEach(function(m){if(m.k==='card'&&kinds.indexOf(m.c)>-1)m.locked=true})}
+  function hasCard(kind){return S.msgs.some(function(m){return m.k==='card'&&m.c===kind&&!m.locked})}
+
+  /* ---------- actions ---------- */
+  function enterChat(entry){
+    S.entry=entry; S.inChat=true; S.msgs=[]; S.seated=(entry!=='app'); S.stage='order';
+    card('welcome'); if(S.seated) afterSeat();
+  }
+  function afterSeat(){
+    ai('Oi! Que bom ter você aqui na Mesa 12. Aqui você não precisa pedir a conta: eu pago quando você confirmar o pedido, com o que já está no seu app.'+(isWeb()?'':' Hoje seu saldo de almoço é R$ 38,00 (valor ilustrativo).'));
+    ai('O que você está a fim de comer hoje? Pode escrever, falar'+(isWeb()?'.':', ou pedir "o de sempre".'));
+    card('recs'); S.stage='order';
+  }
+  function openConfirm(){if(!S.cart.length||hasCard('confirm')) return; card('confirm')}
+  function sempre(){
+    user('O de sempre'); S.cart=['frango','suco']; removeCards(['recs','menu','confirm']); S.menu=null;
+    ai('Boa! O de sempre: Executivo de frango e suco de laranja. Já deixei tudo pronto: é só confirmar que eu pago e mando para a cozinha.');
+    card('confirm');
+  }
+  function confirmSend(){
+    var ids=S.cart.slice(), base=sumIds(ids), tip=base*tipPct()/100, tot=base+tip;
+    S.rounds.push(ids); var n=S.rounds.length; S.cart=[];
+    removeCards(['recs','menu','confirm']); S.menu=null;
+    if(S.payLater){
+      card('sent',{ids:ids,i:n});
+      ai('Combinado! Mandei para a cozinha, cerca de 12 min. Você paga no final com o garçom, do jeito de sempre. O garçom só leva o prato.');
+    }else{
+      S.receipts.push({ids:ids,base:base,tip:tip,tot:tot,pay:S.pay,tipOn:S.tipOn});
+      card('paid',{i:n,r:S.receipts.length-1});
+      ai('Prontinho! Paguei '+BRL(tot)+' com '+payName[S.pay]+' e já mandei para a cozinha, cerca de 12 min. O garçom só leva o prato. Se algo estiver errado no pedido, toque em "Pedido errado".');
+      S.paidSum+=tot;
+    }
+    S.stage='eating';
+  }
+  function callWaiter(from){if(!from)user('Chamar garçom'); S.called=true; ai('Chamei o garçom. Ele já viu o resumo da mesa e está a caminho.')}
+  function wrongOrder(from){if(!from)user('Pedido errado'); S.called=true; S.wrong=true; ai('Desculpa por isso! Chamei o garçom. Ele já viu o que você pediu e o que foi pago, e chega em instantes para acertar.')}
+  function orderMore(from){
+    if(!from)user('Pedir mais'); ai('Claro! O que mais você quer? Posso sugerir, ou é só falar. Eu pago do mesmo jeito.');
+    S.menu=applyFilter({shrimp:S.allergy}); removeCards(['menu']); card('menu'); S.stage='order';
+  }
+  function payLate(from){
+    if(!from)user('Pagar com o garçom'); S.pay='maq';
+    ai('Garçom avisado: ele vai levar a Maquinona até a Mesa 12. A mesa fica aberta até ele confirmar o recebimento.'); card('wait');
+  }
+  function finish(from){
+    if(!from)user('Já terminei');
+    if(S.payLater&&!S.paid&&!S.msgs.some(function(m){return m.c==='wait'})){ai('Antes de sair: falta o pagamento do que você pediu.'); payLate(true); return}
+    lockCards(['wait']); S.stage='done';
+    ai('Que bom que você curtiu! Tudo está pago e sua mesa já foi liberada. Obrigada pela visita, volte amanhã.'); card('done');
+  }
+  function simulatePaid(){S.paid=true; lockCards(['wait']); S.stage='done'; ai('Pagamento recebido. Sua mesa já foi liberada. Obrigada pela visita, volte amanhã.'); card('done')}
+  function goStep(n){
+    var k={joined:S.joined,invited:S.invited,queue:S.queue,mode:S.mode};
+    if(S.timer)clearTimeout(S.timer);
+    fresh(k.mode); S.joined=k.joined; S.invited=k.invited; S.queue=k.queue;
+    if(n>=1) enterChat(isWeb()?'web':'qr');
+    if(n>=2){S.cart=['frango','suco']; confirmSend()}
+    if(n>=3) finish(true);
+  }
+
+  /* ---------- AI ---------- */
+  function parse(text){
+    var t=text.toLowerCase(), f={shrimp:/camar[aã]o|frutos do mar|marisco/.test(t),veg:/vegetar|vegano|sem carne/.test(t),budget:null,only:null,light:/leve|saud[aá]vel|salada/.test(t)};
+    var m=t.match(/(?:at[eé]|r\$|ate)\s*(\d{2,3})/); if(m) f.budget=+m[1];
+    else if(!isWeb()&&/saldo|vale|vr/.test(t)) f.budget=VR;
+    if(/frango/.test(t)) f.only='frango'; else if(/peixe|salm[aã]o/.test(t)) f.only='salmao'; else if(/carne|fil[eé]/.test(t)) f.only='file';
+    return f;
+  }
+  function applyFilter(f){
+    return MENU.filter(function(m){
+      if(m.kind==='bebida') return true;
+      if(f.shrimp&&m.shrimp) return false;
+      if(f.veg&&!m.veg) return false;
+      if(f.only&&m.id!==f.only) return false;
+      if(f.light&&!(m.id==='omelete'||m.id==='frango'||m.id==='strogonofe')) return false;
+      if(f.budget&&m.v>f.budget+5) return false;
+      return true;
+    });
+  }
+  function describe(f){
+    var p=[]; if(f.shrimp)p.push('sem camarão'); if(f.veg)p.push('vegetariano'); if(f.light)p.push('algo leve'); if(f.only)p.push(byId(f.only).n.toLowerCase()); if(f.budget)p.push('até R$ '+f.budget);
+    return p.length?p.join(', '):'sem restrições';
+  }
+  function respond(text){
+    var t=text.toLowerCase();
+    if(S.stage==='done'){ai('Está tudo certo por aqui. Até a próxima!'); return}
+    if(S.stage==='eating'){
+      if(/errad/.test(t)){wrongOrder(true); return}
+      if(/terminei|liberar|ir embora|ja terminei|já terminei/.test(t)){finish(true); return}
+      if(/conta|pagar/.test(t)){ai(S.payLater?'Posso avisar o garçom para o pagamento. Toque em "Pagar com o garçom".':'Boa notícia: você não precisa pedir a conta, tudo já foi pago na hora do pedido. Quando terminar, é só me avisar que eu libero a mesa.'); return}
+      if(/gar[cç]om|chamar/.test(t)){callWaiter(true); return}
+      if(/mais|sobremesa|bebida|suco|outro/.test(t)){orderMore(true); return}
+      ai('Posso ajudar com: pedir mais, chamar o garçom ou liberar a mesa quando você terminar.'); return;
+    }
+    if(/de sempre/.test(t)&&!isWeb()){S.cart=['frango','suco']; removeCards(['recs','menu','confirm']); S.menu=null; ai('Boa! O de sempre: Executivo de frango e suco de laranja. Já deixei tudo pronto: é só confirmar que eu pago e mando para a cozinha.'); card('confirm'); return}
+    var f=parse(text); if(f.shrimp) S.allergy=true;
+    S.menu=applyFilter(f); removeCards(['recs','menu']);
+    ai('Entendi: '+describe(f)+'. Montei o cardápio para você:'+(f.shrimp?' <b>Alergia a camarão anotada</b>: a cozinha vai receber esse aviso.':''));
+    card('menu');
+  }
+  function ask(text,voice){
+    if(S.timer||S.thinking||!S.inChat||!S.seated) return;
+    var go=function(){
+      S.listening=false; user(text); S.thinking=true; render();
+      S.timer=setTimeout(function(){S.thinking=false; S.timer=null; respond(text); render()},650);
+    };
+    if(voice){S.listening=true; render(); S.timer=setTimeout(function(){S.timer=null;go()},1100)}
+    else go();
+  }
+  var voiceText=function(){return S.stage==='eating'?'Terminei, pode liberar a mesa':(S.menu?'Sem camarão, até R$ 38':'Algo leve, sem camarão')};
+
+  /* ---------- html ---------- */
+  function head(sub){
+    var h='<div class="status"><span>12:08</span><span>●●● 5G</span></div>';
+    if(isWeb()) return h+'<div class="url"><span>🔒 ifood.com.br/mesa/12</span><span>Sem login</span></div>';
+    return h+'<div class="apphead"><span class="logo">ifood</span><div><small>'+(S.inChat?'Cantina da Paulista':'Bom almoço')+'</small><b>'+sub+'</b></div></div>';
+  }
+  function page(scroll,foot){return '<div class="body"><div class="scroll" id="sc">'+scroll+'</div>'+(foot?'<div class="foot">'+foot+'</div>':'')+'</div>'}
+  function opt(n,v,t,d,cur){return '<label class="opt"><input type="radio" name="'+n+'" value="'+v+'"'+(cur===v?' checked':'')+'><span><b>'+t+'</b>'+d+'</span></label>'}
+  function receiptAll(){
+    var out='<div class="who">Você (Ana) · pago</div>'+flat().map(function(id){var m=byId(id);return '<div class="row"><span>'+m.n+'</span><span>'+fmt(m.v)+'</span></div>'}).join('');
+    if(S.joined) out+='<div class="who">Bia · pago por ela</div><div class="row"><span>Salmão grelhado</span><span>62,00</span></div><div class="row"><span>Água com gás</span><span>6,00</span></div><div class="who">Caio · pago por ele</div><div class="row"><span>Executivo de filé</span><span>54,00</span></div><div class="row"><span>Suco de limão</span><span>9,50</span></div>';
+    return out;
+  }
+  function itemCard(m,label){
+    var on=S.cart.indexOf(m.id)>-1;
+    var fit=(!isWeb()&&m.kind==='prato')?(m.v<=VR?' · cabe no saldo':' · passa R$ '+fmt(m.v-VR)+' do VR'):'';
+    return '<div class="menuitem"><span>'+(label?'<em class="rec">'+label+'</em>':'')+'<b>'+m.n+'</b><small>'+m.d+' · '+BRL(m.v)+fit+'</small></span><button data-add="'+m.id+'" class="'+(on?'on':'')+'">'+(on?'Adicionado':'Adicionar')+'</button></div>';
+  }
+  function confirmBody(){
+    var items=S.cart.map(function(id){var x=byId(id);return '<div class="menuitem"><span><b>'+x.n+'</b><small>'+BRL(x.v)+'</small></span><button data-add="'+id+'">Remover</button></div>'}).join('');
+    var tot=cartTotal(), b='<b>Confirme o seu pedido</b>'+items;
+    b+='<div class="sum"><span>Pedido</span><span>'+BRL(cartBase())+'</span></div><div class="sum"><span>Taxa de serviço sugerida'+(S.tipOn?' (10%)':'')+'</span><span>'+BRL(cartTip())+'</span></div>'+
+      (S.tipOn?'<button class="linkbtn" data-tipask="1">Não quero pagar a taxa</button>':'<small>Taxa de serviço removida. <button class="linkbtn" data-tipon="1">Voltar a incluir</button></small>')+
+      '<div class="sum big"><span>Total</span><span>'+BRL(tot)+'</span></div>';
+    if(S.payLater){
+      b+='<div class="note">Combinado: o pedido vai à cozinha e você paga no final com o garçom (dinheiro ou maquininha). <button class="linkbtn" data-later="1">Prefiro pagar agora pelo app</button></div>';
+    }else if(isWeb()){
+      b+=opt('pay','pix','Pix','Copia e cola ou QR',S.pay)+opt('pay','apple','Apple Pay ou Google Pay','Um toque com biometria',S.pay)+opt('pay','cartao','Cartão','Digite uma vez',S.pay);
+    }else{
+      b+='<div class="aibox"><b>Pagamento automático</b> '+payLine(tot)+'. <button class="linkbtn" data-payopen="1">'+(S.payOpen?'Fechar':'Mudar')+'</button></div>';
+      if(S.payOpen) b+=opt('pay','saldo','VR (saldo iFood Benefícios) + Pix','Usa o saldo do dia e completa no Pix',S.pay)+opt('pay','pix','Pix','Copia e cola ou QR',S.pay)+opt('pay','cartao','Cartão ••4417','Salvo no app',S.pay);
+    }
+    if(S.allergy) b+='<div class="note al">Alergia a camarão: aviso destacado na comanda da cozinha.</div>';
+    b+='<small>Ao confirmar, '+(S.payLater?'o pedido vai direto para a cozinha.':'eu pago e o pedido vai direto para a cozinha.')+'</small>'+
+      '<button class="cta" data-confirm="1">'+(S.payLater?'Confirmar e enviar à cozinha':'Confirmar e pagar '+BRL(tot))+'</button><button class="ghost" data-closereview="1">Voltar e editar</button>';
+    if(!S.payLater) b+='<button class="linkbtn" data-later="1">Prefiro pagar no final (dinheiro ou maquininha)</button>';
+    return b;
+  }
+  function cardHtml(m){
+    var c=m.c;
+    if(c==='welcome'){
+      return '<div class="cardm"><b>Cantina da Paulista · Mesa 12</b><small>Executivo · aceita VR · 2 mesas livres, sem fila</small>'+
+        (S.seated?'<span class="okline">✓ Você está na Mesa 12</span>':'<button class="cta sm" data-seat="1">Estou na Mesa 12</button>')+
+        '<button class="mini'+(S.invited?' on':'')+'" data-invite="1" style="align-self:flex-start">'+(S.invited?'Link copiado: quem abrir entra direto':'Opcional: convidar a turma por link')+'</button>'+
+        (isWeb()?'<div class="note">Com a conta iFood você usa VR, cashback e o "de sempre". <button class="linkbtn" data-mode-set="ifood">Entrar com iFood</button></div>':'')+'</div>';
+    }
+    if(c==='recs'){
+      return '<div class="grp">Para você, agora</div>'+
+        (isWeb()?'':'<div class="menuitem" style="border-color:var(--ai);background:#faf8ff"><span><em class="rec">O de sempre</em><b>Executivo de frango + suco de laranja</b><small>R$ 49,40 · você pede toda semana · pago com VR e Pix</small></span><button data-sempre="1">Pedir</button></div>')+
+        RECS.map(function(r){return itemCard(byId(r[0]),r[1])}).join('')+
+        '<div class="grp">Ou responda à pergunta</div><div class="qchips"><button data-q="Algo leve, sem camarão">Algo leve, sem camarão</button><button data-q="Sem camarão, até R$ 38">Sem camarão, até R$ 38</button><button data-q="Vegetariano">Vegetariano</button></div>';
+    }
+    if(c==='menu'){return (S.menu||[]).map(function(x){return itemCard(x,'')}).join('')}
+    if(c==='confirm'){return '<div class="cardm">'+confirmBody()+'</div>'}
+    if(c==='paid'){
+      var r=S.receipts[m.r];
+      return '<div class="cardm ok"><b>✓ Pago e enviado à cozinha</b><div class="receipt">'+r.ids.map(function(id){var x=byId(id);return '<div class="row"><span>'+x.n+'</span><span>'+fmt(x.v)+'</span></div>'}).join('')+
+        '<div class="row"><span>Taxa de serviço'+(r.tipOn?' (10%)':' (removida)')+'</span><span>'+fmt(r.tip)+'</span></div><div class="row tot"><span>Total pago</span><span>'+fmt(r.tot)+'</span></div></div>'+
+        '<small>Pago com '+(r.pay==='saldo'&&!isWeb()?'VR (R$ '+fmt(Math.min(VR,r.tot))+') e Pix (R$ '+fmt(r.tot-Math.min(VR,r.tot))+')':payShort[r.pay])+'</small>'+
+        (S.allergy&&m.i===1?'<span class="alline">Alergia a camarão informada à cozinha</span>':'')+
+        '<button class="ghost" data-wrong="1">Pedido errado? Chamar o garçom</button></div>';
+    }
+    if(c==='sent'){
+      return '<div class="cardm ok"><b>✓ Pedido '+(m.i>1?m.i+' ':'')+'enviado à cozinha</b><small>'+nameList(m.ids)+' · '+BRL(sumIds(m.ids))+' · pagamento no final</small>'+(S.allergy&&m.i===1?'<span class="alline">Alergia a camarão informada à cozinha</span>':'')+'<button class="ghost" data-wrong="1">Pedido errado? Chamar o garçom</button></div>';
+    }
+    if(c==='wait'){
+      return '<div class="cardm"><b>Aguardando o garçom</b><small>Pagamento: maquininha · '+BRL(S.rounds.length?S.rounds.reduce(function(a,r){return a+sumIds(r)},0)*(1+tipPct()/100):0)+'</small>'+(m.locked?'':'<button class="ghost" data-paid="1">Simular: pagamento recebido</button>')+'</div>';
+    }
+    if(c==='done'){
+      return '<div class="cardm"><div class="done"><div class="check" aria-hidden="true">✓</div><b>Tudo pago. Mesa liberada.</b></div>'+
+        '<div class="receipt">'+receiptAll()+'<div class="row tot"><span>Você pagou</span><span>'+fmt(S.payLater?S.rounds.reduce(function(a,r){return a+sumIds(r)},0)*(1+tipPct()/100):S.paidSum)+'</span></div></div>'+
+        '<div class="stars" role="group" aria-label="Avaliar">'+[1,2,3,4,5].map(function(i){return '<button data-star="'+i+'" class="'+(S.rating>=i?'on':'')+'" aria-label="'+i+' estrelas">★</button>'}).join('')+'</div>'+
+        (S.rating?'<small style="text-align:center">Obrigada pela avaliação.</small>':'')+
+        (isWeb()?'<div class="aibox"><b>Dica</b> Crie sua conta iFood e ganhe um cupom para o próximo almoço.</div><button class="ghost" data-mode-set="ifood">Criar conta iFood</button>'
+          :'<div class="aibox"><b>IA</b> Amanhã é só dizer "o de sempre": eu peço e pago em 2 toques. Nota fiscal no app e cashback do Clube iFood aplicado (exemplo).</div>')+
+        '<button class="ghost" data-restart="1">Recomeçar</button></div>';
+    }
+    return '';
+  }
+  function thread(){
+    var out=S.msgs.map(function(m){
+      if(m.k==='ai') return '<div class="b a">'+m.t+'</div>';
+      if(m.k==='u') return '<div class="b u">'+m.t+'</div>';
+      return cardHtml(m);
+    }).join('');
+    if(S.listening) out+='<div class="listen"><span class="wave"><i></i><i></i><i></i><i></i><i></i></span>Ouvindo…</div>';
+    if(S.thinking) out+='<div class="listen">Pensando…</div>';
+    return out;
+  }
+  function chatScreen(){
+    var s=stepIdx(), foot='';
+    var prog='<div class="prog" aria-label="Etapa da jornada">'+names.map(function(n,i){return '<i class="'+(i<s?'done':(i===s?'cur':''))+'" style="width:34px"></i>'}).join('')+'<span>'+(s+1)+'/4 · '+names[s]+'</span></div>';
+    if(S.seated&&S.stage==='order'&&S.cart.length&&!hasCard('confirm')) foot+='<div class="orderbar"><span>Seu pedido ('+S.cart.length+') · '+BRL(sumIds(S.cart))+'</span><button class="cta sm" data-review="1">Revisar e pagar</button></div>';
+    if(S.stage==='eating') foot+='<div class="qchips"><button data-act="more">Pedir mais</button><button data-act="call">Chamar garçom</button><button data-act="finish">Já terminei</button>'+(S.payLater?'<button data-act="paylate">Pagar com o garçom</button>':'')+'</div>';
+    var ph=S.stage==='eating'?'Ex.: terminei, pode liberar a mesa':'Escreva ou fale com o assistente';
+    foot+='<div class="inrow"><input id="q" type="text" placeholder="'+ph+'" aria-label="Mensagem para o assistente"><button data-voice="1" aria-label="Falar com o assistente">🎤</button><button class="send" data-sendq="1" aria-label="Enviar mensagem ao assistente">↑</button></div>';
+    return head('Assistente · Mesa 12')+prog+page(thread(),foot);
+  }
+  function entryScreen(){
+    if(isWeb()){
+      return head('')+page('<h4>Você está na Mesa 12</h4><p class="s">Cantina da Paulista. O QR abriu esta página, sem baixar nada.</p>'+
+        '<div class="note">Com a conta iFood você usa VR, cashback e o "de sempre". Sem conta, tudo o mais funciona.</div>'+
+        '<button class="ghost" data-mode-set="ifood">Entrar com iFood</button>',
+        '<button class="cta" data-enter="web">Continuar sem login</button>');
+    }
+    var seg='<div class="seg"><button data-entry="app" aria-pressed="'+(S.entry==='app')+'">Abrir o app</button><button data-entry="qr" aria-pressed="'+(S.entry==='qr')+'">Escanear o QR da mesa</button></div>';
+    if(S.entry==='app'){
+      return head('Para você, agora')+page(seg+'<p class="s">Perto da Av. Paulista, com base no que você gosta: executivos e pratos sem frutos do mar.</p>'+
+        '<button class="rcard act" data-enter="app"><span class="ic" style="background:#b9101c">C</span><span><b>Cantina da Paulista</b><small>Executivo · 650 m · 2 mesas livres, sem fila · aceita VR</small></span></button>'+
+        '<div class="rcard"><span class="ic" style="background:#1b8a4f">Q</span><span><b>Quilo &amp; Cia</b><small>'+(S.queue?'Na fila: avisamos quando a mesa liberar. Sem depósito; fica guardada por 10 min.':'Por quilo · 400 m · mesa para 3 em cerca de 8 min')+'</small></span><button class="mini'+(S.queue?' on':'')+'" data-queue="1">'+(S.queue?'Na fila':'Entrar na fila')+'</button></div>'+
+        '<div class="rcard dim"><span class="ic" style="background:#c77a00">F</span><span><b>Forno Bela Vista</b><small>Comercial · 900 m · mesas livres</small></span></div>'+
+        '<div class="aibox"><b>IA</b> Ordenei por gosto, distância e mesas livres agora. Toque na Cantina da Paulista para continuar o teste.</div>','');
+    }
+    return head('Escanear QR')+page(seg+'<div class="qr"><span><i></i>Aponte a câmera para o QR da mesa</span></div><p class="s">O QR abre o app direto no restaurante e na mesa, sem procurar.</p>',
+      '<button class="cta" data-enter="qr">Escanear o QR da Mesa 12</button>');
+  }
+  function caioView(){
+    var h=isWeb()?'<div class="status"><span>12:09</span><span>●●● 5G</span></div><div class="url"><span>🔒 ifood.com.br/mesa/12</span><span>Sem login</span></div>'
+      :'<div class="status"><span>12:09</span><span>●●● 5G</span></div><div class="apphead"><span class="logo">ifood</span><div><small>Cantina da Paulista</small><b>Mesa 12</b></div></div>';
+    var body='<span class="viewpill">Visão do Caio</span>';
+    if(S.invited){
+      body+='<h4>Você entrou na mesa de Ana</h4><p class="s">Pelo convite que ela mandou. Você já pode pedir.</p><div class="note">Você vê a mesa, mas só paga o que pedir.</div>';
+      return h+page(body,'<button class="cta" data-joinnow="1">Ver o cardápio</button>');
+    }
+    body+='<h4>Entrar na mesa de Ana?</h4><p class="s">Cantina da Paulista · Mesa 12 · 1 pessoa na mesa: Ana.</p>'+
+      '<div class="note">Você vê a mesa, mas só paga o que pedir. Os itens de cada pessoa continuam dela.</div>'+
+      '<div class="aibox"><b>IA</b> Você escaneou o QR de uma mesa que já está aberta. Se estão juntos, entre com 1 toque.</div>';
+    return h+page(body,'<button class="cta" data-joinnow="1">Entrar na mesa de Ana</button><button class="ghost" data-closeview="1">Sou de outra comanda</button>');
+  }
+  function modalHtml(){
+    return '<div class="modalwrap"><div class="modal" role="dialog" aria-label="Tirar a taxa de serviço"><h4>Tirar a taxa de serviço?</h4>'+
+      '<p>A taxa de serviço é opcional. Ela ajuda a pagar a equipe do salão: quem leva a comida, quem prepara e quem cuida da limpeza da mesa. A decisão é sua.</p>'+
+      '<div class="two-btn"><button class="ghost" data-tipkeep="1">Manter a taxa</button><button class="ghost" data-tipdrop="1">Tirar a taxa</button></div></div></div>';
+  }
+  function view(){
+    if(S.view==='caio'){screen.innerHTML=caioView(); return}
+    var h=S.inChat?chatScreen():entryScreen();
+    if(S.modal==='tip') h+=modalHtml();
+    screen.innerHTML=h;
+  }
+  function steps(){
+    var s=stepIdx();
+    stepper.innerHTML=names.map(function(n,i){return '<button data-go="'+i+'"'+(s===i?' aria-current="step"':'')+'>'+(i+1)+'. '+n+'</button>'}).join('');
+  }
+
+  /* ---------- garçom ---------- */
+  function garcom(){
+    var s=stepIdx(), waiting=S.msgs.some(function(m){return m.c==='wait'&&!m.locked});
+    var st=[['Livre','Sem check-in','ok'],['Pedindo pelo app','Cliente montando o pedido','wait'],['Em consumo',S.payLater?'Pedido na cozinha · paga no final':'Pedido pago e na cozinha','go'],['Pagou','Livre para limpar','ok']][s];
+    if(waiting) st=['Vai pagar: maquininha','Leve a Maquinona','go'];
+    $('gm12').innerHTML='<div><b>Mesa 12</b><small>'+st[1]+(s>=1?' · '+(S.joined?3:1)+(S.joined?' pessoas':' pessoa'):'')+'</small></div><span class="pill '+st[2]+'">'+st[0]+'</span>';
+    var note=$('gnote');
+    if(waiting){note.className='alert';note.textContent='Mesa 12 vai pagar com maquininha. Leve a Maquinona.'}
+    else if(S.wrong&&s>=2&&s<3){note.className='alert';note.textContent='Mesa 12 chamou: pedido possivelmente errado. Veja o que foi pedido e pago abaixo.'}
+    else if(S.called&&s>=2&&s<3){note.className='alert';note.textContent='Mesa 12 chamou o garçom. Veja o resumo abaixo.'}
+    else if(s===2){note.className='alert';note.textContent='Prato pronto: levar à Mesa 12.'}
+    else if(s>=3){note.className='alert ok';note.textContent='Mesa 12 terminou, tudo pago e livre para limpar.'}
+    else{note.className='alert calm';note.textContent='Nada pendente para você agora.'}
+    var ev=[];
+    if(s>=1) ev.push(['12:08','Cliente abriu a Mesa 12 pelo '+(isWeb()?'QR (página web, sem login)':(S.entry==='qr'?'QR da mesa':'app iFood'))]);
+    if(s>=1&&S.joined) ev.push(['12:09','Bia e Caio entraram na mesa'+(S.invited?' pelo convite':' pelo QR')+'. 3 pessoas na mesa de 4 lugares']);
+    var rs=S.rounds.length?S.rounds:(s>=2?[['frango','suco']]:[]);
+    rs.forEach(function(r,i){
+      var rc=S.receipts[i];
+      ev.push([i===0?'12:11':'12:24',(i===0?'Pedido':'Novo pedido')+' feito pelo cliente, '+(S.payLater?'enviado à cozinha (paga no final)':'<b>pago pelo app</b> ('+(rc?payShort[rc.pay]+', '+BRL(rc.tot):'VR e Pix')+') e enviado à cozinha')+': '+nameList(r)+(S.allergy&&i===0?'. <b>Alergia: camarão</b>':'')]);
+    });
+    if(s>=2) ev.push(['12:21','Cozinha: prato pronto. Levar à mesa']);
+    if(S.called&&s>=2) ev.push(['12:27',S.wrong?'Mesa tocou em "Pedido errado" e chamou o garçom':'Mesa chamou o garçom']);
+    if(waiting||(S.payLater&&s>=3)) ev.push(['12:36','Vai pagar com maquininha no final. Leve a Maquinona']);
+    if(s>=3) ev.push(['12:39','Cliente terminou. Tudo pago. Mesa livre']);
+    $('gtl').innerHTML=ev.length?ev.map(function(e){return '<li><span>'+e[0]+'</span>'+e[1]+'</li>'}).join(''):'<li><span>--:--</span>Nenhum evento ainda. Comece o teste no celular.</li>';
+    var ai_=['IA: ninguém na Mesa 12 ainda.','IA: cliente montando o pedido. Você não precisa confirmar nada.',
+      S.wrong?'IA: o cliente sinalizou pedido errado. Confira o que foi pedido e pago antes de ir.':(S.called?'IA: pedido há 16 min'+(S.allergy?', alergia a camarão informada':'')+'. Mesa chamou agora: veja o resumo antes de ir.':(S.rounds.length>1?'IA: a mesa fez um novo pedido e pagou. A cozinha já recebeu.':'IA: pedido já pago. A mesa deve liberar em cerca de 40 min.')),
+      'IA: mesa liberada. Tudo pago. Avise a limpeza.'][s];
+    $('gai').textContent=ai_;
+  }
+  function simbtn(){
+    var w=$('simwrap'); if(!w) return;
+    w.innerHTML='<button class="simbtn" data-sim="1"'+(S.joined?' disabled':'')+'>'+(S.joined?'Bia e Caio já estão na mesa':'Simular: Bia e Caio chegam e escaneiam o QR')+'</button>';
+  }
+  function render(){
+    var sc=$('sc'), old=sc?sc.scrollTop:0, stick=S.stick; S.stick=false;
+    view(); steps(); simbtn(); garcom();
+    var sc2=$('sc'); if(sc2){sc2.scrollTop=stick?sc2.scrollHeight:old}
+    document.querySelectorAll('.modes button').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.mode===S.mode))});
+  }
+
+  /* ---------- events ---------- */
+  var SEL='[data-go],[data-mode],[data-mode-set],[data-entry],[data-enter],[data-seat],[data-sim],[data-joinnow],[data-closeview],[data-invite],[data-queue],[data-q],[data-add],[data-voice],[data-sendq],[data-review],[data-closereview],[data-confirm],[data-sempre],[data-act],[data-wrong],[data-later],[data-payopen],[data-restart],[data-tipask],[data-tipkeep],[data-tipdrop],[data-tipon],[data-paid],[data-star]';
+  document.addEventListener('click',function(e){
+    var t=e.target.closest(SEL); if(!t) return;
+    var d=t.dataset;
+    if(d.mode||d.modeSet){var m=d.mode||d.modeSet; if(S.timer)clearTimeout(S.timer); fresh(m); render(); return}
+    if(d.go!==undefined){goStep(+d.go); S.modal=null; render(); return}
+    if(d.restart!==undefined){var m2=S.mode; if(S.timer)clearTimeout(S.timer); fresh(m2); render(); return}
+    if(d.sim!==undefined){ if(!S.inChat) enterChat(isWeb()?'web':'qr'); S.view='caio'; render(); return}
+    if(d.joinnow!==undefined){S.joined=true; S.view=null; if(S.inChat&&S.seated) ai('Bia e Caio entraram na mesa'+(S.invited?' pelo convite':' pelo QR')+'. Cada um tem a sua comanda e paga o que pedir.'); render(); return}
+    if(d.closeview!==undefined){S.view=null; render(); return}
+    if(d.invite!==undefined){S.invited=!S.invited; render(); return}
+    if(d.queue!==undefined){S.queue=!S.queue; render(); return}
+    if(d.entry){S.entry=d.entry; render(); return}
+    if(d.enter){enterChat(d.enter); render(); return}
+    if(d.seat!==undefined){S.seated=true; user('Estou na Mesa 12'); afterSeat(); render(); return}
+    if(d.q){ask(d.q,false); return}
+    if(d.voice){ask(voiceText(),true); return}
+    if(d.sendq!==undefined){var inp=$('q'); if(inp&&inp.value.trim()){ask(inp.value.trim(),false)} return}
+    if(d.sempre!==undefined){sempre(); render(); return}
+    if(d.add!==undefined){var id=d.add,i=S.cart.indexOf(id); if(i>-1) S.cart.splice(i,1); else S.cart.push(id); if(!S.cart.length) removeCards(['confirm']); S.stick=false; render(); return}
+    if(d.review!==undefined){openConfirm(); render(); return}
+    if(d.closereview!==undefined){removeCards(['confirm']); render(); return}
+    if(d.confirm!==undefined){confirmSend(); render(); return}
+    if(d.later!==undefined){S.payLater=!S.payLater; S.stick=false; render(); return}
+    if(d.payopen!==undefined){S.payOpen=!S.payOpen; S.stick=false; render(); return}
+    if(d.wrong!==undefined){wrongOrder(false); render(); return}
+    if(d.act){
+      if(d.act==='more') orderMore(false); else if(d.act==='call') callWaiter(false); else if(d.act==='finish') finish(false); else if(d.act==='paylate') payLate(false);
+      render(); return;
+    }
+    if(d.tipask!==undefined){S.modal='tip'; render(); return}
+    if(d.tipkeep!==undefined){S.modal=null; render(); return}
+    if(d.tipdrop!==undefined){S.tipOn=false; S.modal=null; render(); return}
+    if(d.tipon!==undefined){S.tipOn=true; render(); return}
+    if(d.paid!==undefined){simulatePaid(); render(); return}
+    if(d.star){S.rating=+d.star; render(); return}
+  });
+  screen.addEventListener('change',function(e){
+    var el=e.target;
+    if(el.name==='pay'){S.pay=el.value; S.stick=false; render()}
+  });
+  screen.addEventListener('keydown',function(e){
+    if(e.key==='Enter'&&e.target.id==='q'){var v=e.target.value.trim(); if(v) ask(v,false)}
+  });
+  render();
+})();
+</script>
+</body>
+</html>
